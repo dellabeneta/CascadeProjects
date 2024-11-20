@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.database import engine
-from app.models.pessoa import Base
+from app.core.database import engine, Base
 from app.routes import pessoa
 
 # Criar as tabelas no banco de dados

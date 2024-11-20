@@ -12,12 +12,19 @@ import {
   Typography,
   Box,
   IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
 import api from '../services/api';
 
 function ListaPessoas() {
   const [pessoas, setPessoas] = useState([]);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [pessoaParaDeletar, setPessoaParaDeletar] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,10 +44,21 @@ function ListaPessoas() {
     navigate(`/editar/${id}`);
   };
 
-  const handleDeletar = async (id) => {
-    if (window.confirm('Tem certeza que deseja deletar esta pessoa?')) {
+  const handleAbrirDeleteDialog = (pessoa) => {
+    setPessoaParaDeletar(pessoa);
+    setDeleteDialog(true);
+  };
+
+  const handleFecharDeleteDialog = () => {
+    setDeleteDialog(false);
+    setPessoaParaDeletar(null);
+  };
+
+  const handleConfirmarDelete = async () => {
+    if (pessoaParaDeletar) {
       try {
-        await api.delete(`/pessoas/${id}`);
+        await api.delete(`/pessoas/${pessoaParaDeletar.id}`);
+        handleFecharDeleteDialog();
         carregarPessoas();
       } catch (error) {
         console.error('Erro ao deletar pessoa:', error);
@@ -54,7 +72,16 @@ function ListaPessoas() {
 
   return (
     <Box sx={{ mt: 4 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        mb: 2,
+        alignItems: 'center',
+        '& > button': {
+          marginLeft: 2,
+          marginRight: '80px'
+        }
+      }}>
         <Typography variant="h4" component="h1">
           Pessoas Cadastradas
         </Typography>
@@ -97,7 +124,7 @@ function ListaPessoas() {
                   </IconButton>
                   <IconButton
                     color="error"
-                    onClick={() => handleDeletar(pessoa.id)}
+                    onClick={() => handleAbrirDeleteDialog(pessoa)}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -107,6 +134,40 @@ function ListaPessoas() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Diálogo de confirmação de exclusão */}
+      <Dialog
+        open={deleteDialog}
+        onClose={handleFecharDeleteDialog}
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
+      >
+        <DialogTitle id="delete-dialog-title">
+          Confirmar Exclusão
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-dialog-description">
+            Tem certeza que deseja excluir {pessoaParaDeletar?.nome}? 
+            Esta ação não poderá ser desfeita.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ padding: 2 }}>
+          <Button 
+            onClick={handleFecharDeleteDialog}
+            variant="outlined"
+          >
+            Cancelar
+          </Button>
+          <Button 
+            onClick={handleConfirmarDelete}
+            variant="contained"
+            color="error"
+            autoFocus
+          >
+            Excluir
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

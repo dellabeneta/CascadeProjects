@@ -2,7 +2,38 @@
 
 Sistema completo para gerenciamento de pessoas, com backend em FastAPI e frontend em React.
 
-## Visão Geral
+## 📸 Screenshots
+
+<div align="center">
+
+### 📋 Lista de Pessoas
+*Visualização principal com tabela de registros e ações*
+<img src="docs/images/lista-pessoas.png" alt="Lista de Pessoas" width="800"/>
+
+<br/>
+
+### ✏️ Formulários
+*Interface de cadastro e edição de registros*
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>Cadastro de Nova Pessoa</strong><br/>
+      <img src="docs/images/cadastro.png" alt="Cadastro" width="400"/>
+    </td>
+    <td align="center" width="50%">
+      <strong>Edição de Registro</strong><br/>
+      <img src="docs/images/edicao.png" alt="Edição" width="400"/>
+    </td>
+  </tr>
+</table>
+
+### 📚 Documentação da API
+*Interface Swagger com todos os endpoints documentados*
+<img src="docs/images/api-docs.png" alt="API Docs" width="800"/>
+
+</div>
+
+## 📋 Visão Geral
 
 O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidades:
 - Listagem de pessoas
@@ -11,7 +42,7 @@ O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidade
 - Exclusão de registro
 - Interface web moderna e responsiva
 
-## Tecnologias Utilizadas
+## 🚀 Tecnologias Utilizadas
 
 ### Backend
 - Python 3.x
@@ -28,7 +59,7 @@ O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidade
 - Axios
 - Vite
 
-## Estrutura do Projeto
+## 🛠️ Estrutura do Projeto
 
 ```
 CascadeProjects/
@@ -43,7 +74,7 @@ CascadeProjects/
     └── package.json
 ```
 
-## Como Executar
+## 🚀 Como Executar
 
 ### Backend
 
@@ -79,13 +110,13 @@ npm install
 npm run dev
 ```
 
-## Acessando o Sistema
+## 📱 Acessando o Sistema
 
 - Frontend: http://localhost:5173
 - API Docs: http://localhost:8080/docs
 - ReDoc: http://localhost:8080/redoc
 
-## Funcionalidades Principais
+## 🔍 Funcionalidades Principais
 
 1. Gerenciamento de Pessoas
    - Cadastro com nome, email, telefone, data de nascimento

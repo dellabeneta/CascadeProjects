@@ -2,7 +2,7 @@
 
 Interface web moderna para o sistema de gerenciamento de pessoas.
 
-## 🚀 Tecnologias
+## Tecnologias
 
 - **React**: Biblioteca JavaScript para construção de interfaces
 - **Vite**: Build tool e dev server
@@ -10,7 +10,7 @@ Interface web moderna para o sistema de gerenciamento de pessoas.
 - **React Router**: Navegação
 - **Axios**: Cliente HTTP para requisições à API
 
-## 📦 Dependências Principais
+## Dependências Principais
 
 ```json
 {
@@ -25,7 +25,7 @@ Interface web moderna para o sistema de gerenciamento de pessoas.
 }
 ```
 
-## 🛠️ Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 frontend/
@@ -43,7 +43,7 @@ frontend/
 └── package.json
 ```
 
-## 🔍 Funcionalidades
+## Funcionalidades
 
 - Lista de pessoas com ações de editar/excluir
 - Formulário de cadastro de pessoas
@@ -52,13 +52,13 @@ frontend/
 - Interface responsiva e moderna
 - Integração com API REST
 
-## 📱 Páginas
+## Páginas
 
 - `/`: Lista de pessoas cadastradas
 - `/cadastrar`: Formulário de cadastro
 - `/editar/:id`: Formulário de edição
 
-## 🚀 Como Executar
+## Como Executar
 
 1. Instale as dependências:
 ```bash
@@ -73,7 +73,7 @@ npm run dev
 3. Acesse a aplicação:
 - URL: http://localhost:5173
 
-## ⚙️ Configuração
+## Configuração
 
 O frontend está configurado para se conectar ao backend na porta 8080. 
 Certifique-se de que o backend esteja rodando antes de iniciar o frontend.

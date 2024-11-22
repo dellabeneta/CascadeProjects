@@ -90,7 +90,7 @@ pip install -r requirements.txt
 
 3. Execute o servidor:
 ```bash
-uvicorn app.main:app --reload --port 8080
+uvicorn app.main:app --reload --port 8000
 ```
 
 ### Frontend
@@ -113,8 +113,8 @@ npm run dev
 ## 📱 Acessando o Sistema
 
 - Frontend: http://localhost:5173
-- API Docs: http://localhost:8080/docs
-- ReDoc: http://localhost:8080/redoc
+- API Docs: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
 
 ## 🔍 Funcionalidades Principais
 
@@ -194,14 +194,25 @@ Lista de melhorias e ajustes necessários para preparar o sistema para um ambien
 - Sistema de backups
 - Plano de disaster recovery
 
-### 9. 💻 Código
+### 9. 🔐 Gestão de Secrets e Configurações
+- Mover SECRET_KEY do JWT para variável de ambiente
+- Configurar demais variáveis de JWT (ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES)
+- Criar arquivo .env.example com template das variáveis
+- Adicionar .env ao .gitignore
+- Implementar validação de variáveis de ambiente obrigatórias
+- Configurar caminho do banco SQLite via variável de ambiente
+- Preparar estrutura para secrets futuros (email, APIs externas, etc)
+- Implementar rotação automática de secrets
+- Considerar uso de cofre de secrets (HashiCorp Vault, AWS Secrets Manager)
+
+### 10. 💻 Código
 - Remoção de código de debug
 - Otimização de imports
 - Validações mais robustas
 - Tratamento de erros completo
 - Implementação de tipos estáticos
 
-### 10. 🌟 Boas Práticas de Produção
+### 11. 🌟 Boas Práticas de Produção
 - Versionamento de API
 - Políticas de retry
 - Implementação de circuit breakers

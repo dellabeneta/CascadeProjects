@@ -6,6 +6,7 @@ from datetime import date
 from app.core.database import get_db
 from app.models.pessoa import Pessoa
 from app.schemas.pessoa import PessoaCreate, PessoaUpdate, PessoaResponse
+from app.core.auth import verify_token
 
 # Criar o router com prefixo /pessoas
 router = APIRouter(
@@ -15,7 +16,7 @@ router = APIRouter(
 )
 
 @router.post("/", response_model=PessoaResponse, status_code=status.HTTP_201_CREATED)
-def criar_pessoa(pessoa: PessoaCreate, db: Session = Depends(get_db)):
+def criar_pessoa(pessoa: PessoaCreate, db: Session = Depends(get_db), current_user = Depends(verify_token)):
     """
     Cria uma nova pessoa no sistema.
     
@@ -48,24 +49,25 @@ def criar_pessoa(pessoa: PessoaCreate, db: Session = Depends(get_db)):
 def listar_pessoas(
     skip: int = 0,
     limit: int = 100,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(verify_token)
 ):
     """
-    Lista todas as pessoas cadastradas.
+    Lista todas as pessoas cadastradas no sistema.
     
     Args:
-        skip: Número de registros para pular (paginação)
-        limit: Número máximo de registros a retornar
+        skip: Número de registros para pular
+        limit: Número máximo de registros para retornar
         db: Sessão do banco de dados
     
     Returns:
-        List[PessoaResponse]: Lista de pessoas cadastradas
+        List[PessoaResponse]: Lista de pessoas encontradas
     """
     pessoas = db.query(Pessoa).offset(skip).limit(limit).all()
     return pessoas
 
 @router.get("/{pessoa_id}", response_model=PessoaResponse)
-def obter_pessoa(pessoa_id: int, db: Session = Depends(get_db)):
+def obter_pessoa(pessoa_id: int, db: Session = Depends(get_db), current_user = Depends(verify_token)):
     """
     Obtém uma pessoa específica pelo ID.
     
@@ -79,19 +81,20 @@ def obter_pessoa(pessoa_id: int, db: Session = Depends(get_db)):
     Raises:
         HTTPException: Se a pessoa não for encontrada
     """
-    pessoa = db.query(Pessoa).filter(Pessoa.id == pessoa_id).first()
-    if pessoa is None:
+    db_pessoa = db.query(Pessoa).filter(Pessoa.id == pessoa_id).first()
+    if db_pessoa is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Pessoa não encontrada"
         )
-    return pessoa
+    return db_pessoa
 
 @router.put("/{pessoa_id}", response_model=PessoaResponse)
 def atualizar_pessoa(
     pessoa_id: int,
     pessoa: PessoaUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(verify_token)
 ):
     """
     Atualiza os dados de uma pessoa específica.
@@ -115,16 +118,15 @@ def atualizar_pessoa(
         )
     
     # Atualizar apenas os campos fornecidos
-    pessoa_data = pessoa.model_dump(exclude_unset=True)
-    for key, value in pessoa_data.items():
-        setattr(db_pessoa, key, value)
+    for field, value in pessoa.model_dump(exclude_unset=True).items():
+        setattr(db_pessoa, field, value)
     
     db.commit()
     db.refresh(db_pessoa)
     return db_pessoa
 
 @router.delete("/{pessoa_id}", status_code=status.HTTP_204_NO_CONTENT)
-def remover_pessoa(pessoa_id: int, db: Session = Depends(get_db)):
+def remover_pessoa(pessoa_id: int, db: Session = Depends(get_db), current_user = Depends(verify_token)):
     """
     Remove uma pessoa do sistema.
     
@@ -135,12 +137,13 @@ def remover_pessoa(pessoa_id: int, db: Session = Depends(get_db)):
     Raises:
         HTTPException: Se a pessoa não for encontrada
     """
-    pessoa = db.query(Pessoa).filter(Pessoa.id == pessoa_id).first()
-    if pessoa is None:
+    db_pessoa = db.query(Pessoa).filter(Pessoa.id == pessoa_id).first()
+    if db_pessoa is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Pessoa não encontrada"
         )
     
-    db.delete(pessoa)
+    db.delete(db_pessoa)
     db.commit()
+    return None

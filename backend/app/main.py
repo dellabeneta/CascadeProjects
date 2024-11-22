@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.database import engine, Base
-from app.routes import pessoa
+from app.routes import pessoa, auth
 
 # Criar as tabelas no banco de dados
 Base.metadata.create_all(bind=engine)
@@ -24,6 +24,7 @@ app.add_middleware(
 )
 
 # Incluir as rotas
+app.include_router(auth.router, prefix="/auth", tags=["authentication"])
 app.include_router(pessoa.router)
 
 # Rota raiz

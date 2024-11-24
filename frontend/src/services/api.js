@@ -7,25 +7,31 @@ const api = axios.create({
     },
 });
 
-// Interceptor para adicionar o token em todas as requisições
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
+// Intercepta todas as requisições
+api.interceptors.request.use(config => {
+    // Obtém o token do sessionStorage
+    const token = sessionStorage.getItem('token');
+    
+    // Se houver um token, adiciona ele no header
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+    
     return config;
+}, error => {
+    return Promise.reject(error);
 });
 
-// Interceptor para tratar erros de autenticação
-api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
-            localStorage.removeItem('token');
-            window.location.href = '/login';
-        }
-        return Promise.reject(error);
+// Intercepta todas as respostas
+api.interceptors.response.use(response => {
+    return response;
+}, error => {
+    if (error.response?.status === 401) {
+        // Se receber um 401 (não autorizado), remove o token
+        sessionStorage.removeItem('token');
+        window.location.href = '/login';
     }
-);
+    return Promise.reject(error);
+});
 
 export default api;

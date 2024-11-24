@@ -1,3 +1,14 @@
+## 📫 Contato
+
+Desenvolvido por Michel Dellabeneta 👋
+
+[![LinkedIn](https://img.shields.io/badge/-Michel%20Dellabeneta-blue?style=flat-square&logo=linkedin&logoColor=white&link=https://www.linkedin.com/in/mdellabeneta/)](https://www.linkedin.com/in/mdellabeneta/)
+[![GitHub](https://img.shields.io/badge/-dellabeneta-gray?style=flat-square&logo=github&logoColor=white&link=https://github.com/dellabeneta/)](https://github.com/dellabeneta/)
+[![Gmail](https://img.shields.io/badge/-m.dellabeneta@gmail.com-red?style=flat-square&logo=gmail&logoColor=white&link=mailto:m.dellabeneta@gmail.com)](mailto:m.dellabeneta@gmail.com)
+[![Linktree](https://img.shields.io/badge/-Linktree-green?style=flat-square&logo=linktree&logoColor=white&link=https://linktr.ee/dellabeneta)](https://linktr.ee/dellabeneta)
+
+💼 Este projeto de estudos está aberto a colaborações!
+
 # Sistema de Cadastro de Pessoas
 
 Sistema completo para gerenciamento de pessoas, com backend em FastAPI e frontend em React.

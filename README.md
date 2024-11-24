@@ -1,5 +1,3 @@
-## 📫 Contato
-
 Desenvolvido por Michel Dellabeneta 👋
 
 [![LinkedIn](https://img.shields.io/badge/-Michel%20Dellabeneta-blue?style=flat-square&logo=linkedin&logoColor=white&link=https://www.linkedin.com/in/mdellabeneta/)](https://www.linkedin.com/in/mdellabeneta/)
@@ -7,7 +5,7 @@ Desenvolvido por Michel Dellabeneta 👋
 [![Gmail](https://img.shields.io/badge/-m.dellabeneta@gmail.com-red?style=flat-square&logo=gmail&logoColor=white&link=mailto:m.dellabeneta@gmail.com)](mailto:m.dellabeneta@gmail.com)
 [![Linktree](https://img.shields.io/badge/-Linktree-green?style=flat-square&logo=linktree&logoColor=white&link=https://linktr.ee/dellabeneta)](https://linktr.ee/dellabeneta)
 
-💼 Este projeto de estudos está aberto a colaborações!
+Este projeto de estudos está aberto a colaborações!
 
 # Sistema de Cadastro de Pessoas
 

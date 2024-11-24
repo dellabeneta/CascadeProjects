@@ -51,50 +51,38 @@ def criar_pessoa(pessoa: PessoaCreate, db: Session = Depends(get_db), current_us
 def listar_pessoas(
     page: int = 1,
     per_page: int = 10,
+    search: str = None,
     db: Session = Depends(get_db),
     current_user = Depends(verify_token)
 ):
     """
-    Lista pessoas com paginação.
-    
-    Args:
-        page: Número da página (começa em 1)
-        per_page: Quantidade de itens por página
-        db: Sessão do banco de dados
-    
-    Returns:
-        PaginatedResponse[PessoaResponse]: Lista paginada de pessoas
+    Lista todas as pessoas cadastradas com paginação e pesquisa.
     """
-    # Garantir valores válidos
-    if page < 1:
-        page = 1
-    if per_page < 1:
-        per_page = 10
-    if per_page > 100:  # Limite máximo por página
-        per_page = 100
+    # Query base
+    query = db.query(Pessoa)
     
-    # Calcular offset
-    offset = (page - 1) * per_page
+    # Aplicar filtro de pesquisa se fornecido
+    if search:
+        search_term = f"%{search}%"
+        query = query.filter(
+            (Pessoa.nome.ilike(search_term)) |
+            (Pessoa.email.ilike(search_term)) |
+            (Pessoa.cpf.ilike(search_term))
+        )
     
-    # Buscar total de registros
-    total = db.query(Pessoa).count()
+    # Calcular total e aplicar paginação
+    total = query.count()
+    pessoas = query.offset((page - 1) * per_page).limit(per_page).all()
     
-    # Buscar pessoas da página atual
-    pessoas = db.query(Pessoa)\
-        .offset(offset)\
-        .limit(per_page)\
-        .all()
+    total_pages = ceil(total / per_page) if total > 0 else 0
     
-    # Calcular total de páginas
-    total_pages = ceil(total / per_page)
-    
-    # Retornar resposta paginada
     return {
         "items": pessoas,
         "total": total,
         "page": page,
         "per_page": per_page,
-        "total_pages": total_pages
+        "total_pages": total_pages,
+        "pages": total_pages
     }
 
 @router.get("/{pessoa_id}", response_model=PessoaResponse)

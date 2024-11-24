@@ -18,8 +18,10 @@ import {
   DialogContent,
   DialogActions,
   DialogContentText,
+  TextField,
+  InputAdornment,
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import api from '../services/api';
 
 function ListaPessoas() {
@@ -29,18 +31,20 @@ function ListaPessoas() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [total, setTotal] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     carregarPessoas();
-  }, [page, rowsPerPage]);
+  }, [page, rowsPerPage, searchTerm]);
 
   const carregarPessoas = async () => {
     try {
       const response = await api.get('/pessoas/', {
         params: {
           page: page + 1, // API começa em 1, MUI começa em 0
-          per_page: rowsPerPage
+          per_page: rowsPerPage,
+          search: searchTerm || undefined
         }
       });
       setPessoas(response.data.items);
@@ -95,7 +99,7 @@ function ListaPessoas() {
     <Box sx={{ width: '100%', p: 3 }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4" component="h1">
-          Lista de Pessoas
+          Pessoas Cadastradas
         </Typography>
         <Button
           variant="contained"
@@ -106,6 +110,22 @@ function ListaPessoas() {
           Cadastrar Pessoa
         </Button>
       </Box>
+
+      <TextField
+        fullWidth
+        variant="outlined"
+        placeholder="Pesquisar por nome, email ou CPF..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        sx={{ mb: 3 }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
 
       <TableContainer component={Paper}>
         <Table>

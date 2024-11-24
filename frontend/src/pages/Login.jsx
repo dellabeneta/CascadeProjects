@@ -89,6 +89,7 @@ const Login = () => {
               label="Usuário"
               name="username"
               type="text"
+              autoFocus
               inputProps={{
                 autoComplete: "off",
                 form: {

@@ -10,6 +10,9 @@ sys.path.append(backend_dir)
 # Muda o diretório de trabalho para o backend para que o SQLite encontre o banco de dados
 os.chdir(backend_dir)
 
+# Garantir que o diretório data existe
+os.makedirs("./data", exist_ok=True)
+
 from app.core.database import SessionLocal, engine, Base
 from app.models.pessoa import Pessoa
 

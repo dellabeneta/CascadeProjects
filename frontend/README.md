@@ -75,5 +75,5 @@ npm run dev
 
 ## Configuração
 
-O frontend está configurado para se conectar ao backend na porta 8080. 
+O frontend está configurado para se conectar ao backend na porta 8000. 
 Certifique-se de que o backend esteja rodando antes de iniciar o frontend.

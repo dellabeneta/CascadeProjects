@@ -10,6 +10,7 @@ class Pessoa(Base):
         nome: Nome completo da pessoa
         email: Endereço de email (único)
         telefone: Número de telefone
+        cpf: CPF da pessoa (único)
         data_nascimento: Data de nascimento
         ativo: Status do cadastro
     """
@@ -19,6 +20,7 @@ class Pessoa(Base):
     nome = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=False)
     telefone = Column(String(20))
+    cpf = Column(String(14), unique=True, index=True, nullable=False)
     data_nascimento = Column(Date)
     ativo = Column(Boolean, default=True)
 

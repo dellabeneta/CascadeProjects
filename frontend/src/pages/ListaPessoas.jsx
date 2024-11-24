@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   Paper,
   Button,
   Typography,
@@ -25,19 +26,37 @@ function ListaPessoas() {
   const [pessoas, setPessoas] = useState([]);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [pessoaParaDeletar, setPessoaParaDeletar] = useState(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [total, setTotal] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     carregarPessoas();
-  }, []);
+  }, [page, rowsPerPage]);
 
   const carregarPessoas = async () => {
     try {
-      const response = await api.get('/pessoas/');
-      setPessoas(response.data);
+      const response = await api.get('/pessoas/', {
+        params: {
+          page: page + 1, // API começa em 1, MUI começa em 0
+          per_page: rowsPerPage
+        }
+      });
+      setPessoas(response.data.items);
+      setTotal(response.data.total);
     } catch (error) {
       console.error('Erro ao carregar pessoas:', error);
     }
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const handleEditar = (id) => {
@@ -50,8 +69,8 @@ function ListaPessoas() {
   };
 
   const handleFecharDeleteDialog = () => {
-    setDeleteDialog(false);
     setPessoaParaDeletar(null);
+    setDeleteDialog(false);
   };
 
   const handleConfirmarDelete = async () => {
@@ -67,23 +86,16 @@ function ListaPessoas() {
   };
 
   const formatarData = (data) => {
-    return new Date(data).toLocaleDateString('pt-BR');
+    if (!data) return '';
+    const [ano, mes, dia] = data.split('-');
+    return `${dia}/${mes}/${ano}`;
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <Box sx={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        mb: 2,
-        alignItems: 'center',
-        '& > button': {
-          marginLeft: 2,
-          marginRight: '80px'
-        }
-      }}>
+    <Box sx={{ width: '100%', p: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4" component="h1">
-          Pessoas Cadastradas
+          Lista de Pessoas
         </Typography>
         <Button
           variant="contained"
@@ -91,7 +103,7 @@ function ListaPessoas() {
           startIcon={<AddIcon />}
           onClick={() => navigate('/cadastrar')}
         >
-          Nova Pessoa
+          Cadastrar Pessoa
         </Button>
       </Box>
 
@@ -133,37 +145,34 @@ function ListaPessoas() {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          component="div"
+          count={total}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[5, 10, 25, 50]}
+          labelRowsPerPage="Itens por página:"
+          labelDisplayedRows={({ from, to, count }) => 
+            `${from}-${to} de ${count !== -1 ? count : `mais de ${to}`}`
+          }
+        />
       </TableContainer>
 
-      {/* Diálogo de confirmação de exclusão */}
       <Dialog
         open={deleteDialog}
         onClose={handleFecharDeleteDialog}
-        aria-labelledby="delete-dialog-title"
-        aria-describedby="delete-dialog-description"
       >
-        <DialogTitle id="delete-dialog-title">
-          Confirmar Exclusão
-        </DialogTitle>
+        <DialogTitle>Confirmar Exclusão</DialogTitle>
         <DialogContent>
-          <DialogContentText id="delete-dialog-description">
-            Tem certeza que deseja excluir {pessoaParaDeletar?.nome}? 
-            Esta ação não poderá ser desfeita.
+          <DialogContentText>
+            Tem certeza que deseja excluir {pessoaParaDeletar?.nome}?
           </DialogContentText>
         </DialogContent>
-        <DialogActions sx={{ padding: 2 }}>
-          <Button 
-            onClick={handleFecharDeleteDialog}
-            variant="outlined"
-          >
-            Cancelar
-          </Button>
-          <Button 
-            onClick={handleConfirmarDelete}
-            variant="contained"
-            color="error"
-            autoFocus
-          >
+        <DialogActions>
+          <Button onClick={handleFecharDeleteDialog}>Cancelar</Button>
+          <Button onClick={handleConfirmarDelete} color="error">
             Excluir
           </Button>
         </DialogActions>

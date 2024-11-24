@@ -6,23 +6,17 @@ Sistema completo para gerenciamento de pessoas, com backend em FastAPI e fronten
 
 <div align="center">
 
-### 📋 Lista de Pessoas
-*Visualização principal com tabela de registros e ações*
-<img src="docs/images/lista-pessoas.png" alt="Lista de Pessoas" width="800"/>
-
-<br/>
-
-### ✏️ Formulários
-*Interface de cadastro e edição de registros*
+### 🌓 Temas Light & Dark
+*Tela de login com suporte a múltiplos temas*
 <table>
   <tr>
     <td align="center" width="50%">
-      <strong>Cadastro de Nova Pessoa</strong><br/>
-      <img src="docs/images/cadastro.png" alt="Cadastro" width="400"/>
+      <strong>Tema Light</strong><br/>
+      <img src="docs/images/login-light.png" alt="Login - Tema Light" width="400"/>
     </td>
     <td align="center" width="50%">
-      <strong>Edição de Registro</strong><br/>
-      <img src="docs/images/edicao.png" alt="Edição" width="400"/>
+      <strong>Tema Dark</strong><br/>
+      <img src="docs/images/login-dark.png" alt="Login - Tema Dark" width="400"/>
     </td>
   </tr>
 </table>
@@ -62,16 +56,30 @@ O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidade
 ## 🛠️ Estrutura do Projeto
 
 ```
-CascadeProjects/
-├── backend/           # API REST em FastAPI
-│   ├── app/          # Código principal da aplicação
-│   ├── scripts/      # Scripts utilitários
-│   └── requirements.txt
+python-sistema-cadastro/
+├── backend/                 # API REST em FastAPI
+│   ├── app/                # Código principal da aplicação
+│   │   ├── core/          # Configurações e utilitários core
+│   │   ├── models/        # Modelos do banco de dados
+│   │   ├── routes/        # Rotas da API
+│   │   ├── schemas/       # Schemas Pydantic
+│   │   └── main.py       # Ponto de entrada da aplicação
+│   ├── scripts/           # Scripts utilitários
+│   └── requirements.txt   # Dependências Python
 │
-└── frontend/         # Interface web em React
-    ├── src/         # Código fonte
-    ├── public/      # Arquivos públicos
-    └── package.json
+├── frontend/              # Interface web em React
+│   ├── src/              # Código fonte
+│   │   ├── components/   # Componentes React reutilizáveis
+│   │   ├── contexts/     # Contextos React
+│   │   ├── pages/        # Páginas da aplicação
+│   │   ├── services/     # Serviços e integrações
+│   │   ├── App.jsx       # Componente principal
+│   │   └── main.jsx      # Ponto de entrada
+│   ├── public/           # Arquivos públicos
+│   └── package.json      # Dependências Node.js
+│
+└── docs/                 # Documentação e assets
+    └── images/          # Screenshots e imagens
 ```
 
 ## 🚀 Como Executar

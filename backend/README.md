@@ -57,6 +57,27 @@ backend/
 - `PUT /pessoas/{id}`: Atualiza uma pessoa
 - `DELETE /pessoas/{id}`: Remove uma pessoa
 
+## Modelos de Dados
+
+### Pessoa
+
+Modelo principal para armazenamento de dados pessoais.
+
+#### Campos
+- `id`: Integer (Primary Key)
+- `nome`: String(100), obrigatório
+- `email`: String(100), único, obrigatório
+- `telefone`: String(20), opcional
+- `data_nascimento`: Date, obrigatório
+- `ativo`: Boolean, default=True
+
+#### Validações
+- Nome: mínimo 2 caracteres, máximo 100
+- Email: formato válido, máximo 100 caracteres
+- Telefone: máximo 20 caracteres
+- Data nascimento: data válida
+- Todos os campos permitem atualização parcial
+
 ## Como Executar
 
 1. Instale as dependências:
@@ -66,9 +87,9 @@ pip install -r requirements.txt
 
 2. Execute o servidor:
 ```bash
-uvicorn app.main:app --reload --port 8080
+uvicorn app.main:app --reload --port 8000
 ```
 
 3. Acesse a documentação:
-- Swagger UI: http://localhost:8080/docs
-- ReDoc: http://localhost:8080/redoc
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc

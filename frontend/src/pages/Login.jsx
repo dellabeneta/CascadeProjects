@@ -8,6 +8,7 @@ import {
   Container,
   Paper,
   Alert,
+  Input,
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -67,45 +68,76 @@ const Login = () => {
           alignItems: 'center',
         }}
       >
-        <Paper elevation={3} sx={{ padding: 4, width: '100%' }}>
+        <Paper sx={{ p: 4 }}>
           <Typography component="h1" variant="h5" align="center" gutterBottom>
             Login
           </Typography>
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
-          <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Box 
+            component="form" 
+            onSubmit={handleSubmit} 
+            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }} 
+            autoComplete="off"
+            spellCheck="false"
+          >
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
             <TextField
-              margin="normal"
               required
-              fullWidth
-              id="username"
               label="Usuário"
               name="username"
-              autoComplete="username"
-              autoFocus
+              type="text"
+              inputProps={{
+                autoComplete: "off",
+                form: {
+                  autoComplete: "off",
+                },
+              }}
               value={formData.username}
               onChange={handleChange}
-            />
-            <TextField
-              margin="normal"
-              required
               fullWidth
-              name="password"
+            />
+            
+            {/* Campo oculto para enganar o preenchimento automático */}
+            <input type="password" style={{ display: 'none' }} />
+            
+            <TextField
+              required
               label="Senha"
-              type="password"
-              id="password"
-              autoComplete="current-password"
+              name="password"
+              // Mudando para text e usando CSS para ocultar
+              type="text"
+              sx={{
+                '& input': {
+                  '-webkit-text-security': 'disc',
+                  'text-security': 'disc'
+                }
+              }}
+              inputProps={{
+                autoComplete: "off",
+                autoCorrect: "off",
+                autoCapitalize: "off",
+                spellCheck: "false",
+                "data-form-type": "other",
+              }}
               value={formData.password}
               onChange={handleChange}
+              fullWidth
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSubmit(e);
+                }
+              }}
             />
+            
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 2 }}
             >
               Entrar
             </Button>

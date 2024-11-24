@@ -2,10 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import date
+from math import ceil
 
 from app.core.database import get_db
 from app.models.pessoa import Pessoa
 from app.schemas.pessoa import PessoaCreate, PessoaUpdate, PessoaResponse
+from app.schemas.pagination import PaginatedResponse
 from app.core.auth import verify_token
 
 # Criar o router com prefixo /pessoas
@@ -45,26 +47,55 @@ def criar_pessoa(pessoa: PessoaCreate, db: Session = Depends(get_db), current_us
     db.refresh(db_pessoa)
     return db_pessoa
 
-@router.get("/", response_model=List[PessoaResponse])
+@router.get("/", response_model=PaginatedResponse[PessoaResponse])
 def listar_pessoas(
-    skip: int = 0,
-    limit: int = 100,
+    page: int = 1,
+    per_page: int = 10,
     db: Session = Depends(get_db),
     current_user = Depends(verify_token)
 ):
     """
-    Lista todas as pessoas cadastradas no sistema.
+    Lista pessoas com paginação.
     
     Args:
-        skip: Número de registros para pular
-        limit: Número máximo de registros para retornar
+        page: Número da página (começa em 1)
+        per_page: Quantidade de itens por página
         db: Sessão do banco de dados
     
     Returns:
-        List[PessoaResponse]: Lista de pessoas encontradas
+        PaginatedResponse[PessoaResponse]: Lista paginada de pessoas
     """
-    pessoas = db.query(Pessoa).offset(skip).limit(limit).all()
-    return pessoas
+    # Garantir valores válidos
+    if page < 1:
+        page = 1
+    if per_page < 1:
+        per_page = 10
+    if per_page > 100:  # Limite máximo por página
+        per_page = 100
+    
+    # Calcular offset
+    offset = (page - 1) * per_page
+    
+    # Buscar total de registros
+    total = db.query(Pessoa).count()
+    
+    # Buscar pessoas da página atual
+    pessoas = db.query(Pessoa)\
+        .offset(offset)\
+        .limit(per_page)\
+        .all()
+    
+    # Calcular total de páginas
+    total_pages = ceil(total / per_page)
+    
+    # Retornar resposta paginada
+    return {
+        "items": pessoas,
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "total_pages": total_pages
+    }
 
 @router.get("/{pessoa_id}", response_model=PessoaResponse)
 def obter_pessoa(pessoa_id: int, db: Session = Depends(get_db), current_user = Depends(verify_token)):

@@ -7,6 +7,8 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não Lançado]
 
+## [1.2.0] - 2024-01-24
+
 ### Adicionado
 - Migração do banco de dados de SQLite para PostgreSQL
 - Suporte a múltiplas conexões simultâneas

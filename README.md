@@ -58,33 +58,33 @@ O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidade
 
 ```
 python-sistema-cadastro/
-├── backend/                 # API REST em FastAPI
-│   ├── app/                # Código principal da aplicação
-│   │   ├── core/          # Configurações e utilitários core
-│   │   ├── models/        # Modelos do banco de dados
-│   │   ├── routes/        # Rotas da API
-│   │   ├── schemas/       # Schemas Pydantic
-│   │   └── main.py       # Ponto de entrada da aplicação
-│   ├── scripts/           # Scripts utilitários
-│   ├── Dockerfile        # Configuração do container
-│   └── requirements.txt   # Dependências Python
+├── backend/                          # API REST em FastAPI
+│   ├── app/                          # Código principal da aplicação
+│   │   ├── core/                     # Configurações e utilitários core
+│   │   ├── models/                   # Modelos do banco de dados
+│   │   ├── routes/                   # Rotas da API
+│   │   ├── schemas/                  # Schemas Pydantic
+│   │   └── main.py                   # Ponto de entrada da aplicação
+│   ├── scripts/                      # Scripts utilitários
+│   ├── Dockerfile                    # Configuração do container
+│   └── requirements.txt              # Dependências Python
 │
-├── frontend/              # Interface web em React
-│   ├── src/              # Código fonte
-│   │   ├── components/   # Componentes React reutilizáveis
-│   │   ├── contexts/     # Contextos React
-│   │   ├── pages/        # Páginas da aplicação
-│   │   ├── services/     # Serviços e integrações
-│   │   ├── App.jsx       # Componente principal
-│   │   └── main.jsx      # Ponto de entrada
-│   ├── public/           # Arquivos públicos
-│   ├── Dockerfile       # Configuração do container
-│   └── package.json      # Dependências Node.js
+├── frontend/                         # Interface web em React
+│   ├── src/                          # Código fonte
+│   │   ├── components/               # Componentes React reutilizáveis
+│   │   ├── contexts/                 # Contextos React
+│   │   ├── pages/                    # Páginas da aplicação
+│   │   ├── services/                 # Serviços e integrações
+│   │   ├── App.jsx                   # Componente principal
+│   │   └── main.jsx                  # Ponto de entrada
+│   ├── public/                       # Arquivos públicos
+│   ├── Dockerfile                    # Configuração do container
+│   └── package.json                  # Dependências Node.js
 │
-├── docker-apocalypse.sh  # Script de limpeza do ambiente Docker
-├── docker-compose.yml    # Configuração dos containers
-└── docs/                 # Documentação e assets
-    └── images/          # Screenshots e imagens
+├── docker-apocalypse.sh              # Script de limpeza do ambiente Docker
+├── docker-compose.yml                # Configuração dos containers
+└── docs/                             # Documentação e assets
+    └── images/                       # Screenshots e imagens
 ```
 
 ## 🚀 Como Executar

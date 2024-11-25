@@ -41,7 +41,7 @@ O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidade
 ### Backend
 - Python 3.11
 - FastAPI (Framework Web)
-- PostgreSQL (Banco de dados)
+- PostgreSQL 15 (Banco de dados)
 - SQLAlchemy (ORM)
 - Pydantic
 - Docker
@@ -49,7 +49,7 @@ O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidade
 
 ### Frontend
 - React 18
-- Material-UI (MUI)
+- Material-UI 5.14.20
 - React Router
 - Axios
 - Vite
@@ -66,6 +66,7 @@ python-sistema-cadastro/
 │   │   ├── schemas/       # Schemas Pydantic
 │   │   └── main.py       # Ponto de entrada da aplicação
 │   ├── scripts/           # Scripts utilitários
+│   ├── Dockerfile        # Configuração do container
 │   └── requirements.txt   # Dependências Python
 │
 ├── frontend/              # Interface web em React
@@ -77,6 +78,7 @@ python-sistema-cadastro/
 │   │   ├── App.jsx       # Componente principal
 │   │   └── main.jsx      # Ponto de entrada
 │   ├── public/           # Arquivos públicos
+│   ├── Dockerfile       # Configuração do container
 │   └── package.json      # Dependências Node.js
 │
 ├── docker-apocalypse.sh  # Script de limpeza do ambiente Docker
@@ -95,12 +97,17 @@ git clone <repository-url>
 cd python-sistema-cadastro
 ```
 
-2. Inicie os containers:
+2. Dê permissão de execução ao script de limpeza:
 ```bash
-docker-compose up -d
+chmod +x docker-apocalypse.sh
 ```
 
-3. Acesse:
+3. Inicie os containers:
+```bash
+docker compose up -d
+```
+
+4. Acesse:
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:8000
 - Documentação API: http://localhost:8000/docs
@@ -110,46 +117,12 @@ Para limpar completamente o ambiente Docker (use com cautela):
 ./docker-apocalypse.sh
 ```
 
-### Backend (Desenvolvimento Local)
-
-1. Entre na pasta do backend:
-```bash
-cd backend
-```
-
-2. Instale as dependências:
-```bash
-pip install -r requirements.txt
-```
-
-3. Execute o servidor:
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
-### Frontend (Desenvolvimento Local)
-
-1. Entre na pasta do frontend:
-```bash
-cd frontend
-```
-
-2. Instale as dependências:
-```bash
-npm install
-```
-
-3. Execute o servidor de desenvolvimento:
-```bash
-npm run dev
-```
-
 ## 🔧 Configurações
 
 ### Backend
 - Python 3.11+
 - FastAPI com dependências otimizadas
-- PostgreSQL para persistência de dados
+- PostgreSQL 15 para persistência de dados
 - Pydantic para validação de dados
 
 ### Frontend
@@ -199,8 +172,7 @@ Lista de melhorias e ajustes necessários para preparar o sistema para um ambien
 - Remoção de informações sensíveis de logs e mensagens de erro
 
 ### 2. 🗄️ Banco de Dados
-- Migração para banco de dados de produção (PostgreSQL/MySQL)
-- Implementação de backups automáticos
+- Configuração de backups automáticos
 - Configuração de pools de conexão
 - Otimização com índices adequados
 - Sistema de migrations para controle de versão

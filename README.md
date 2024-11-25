@@ -36,7 +36,7 @@ O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidade
 - Exclusão de registro
 - Interface web moderna e responsiva
 
-## 🚀 Tecnologias Utilizadas
+## ⚙️ Tecnologias Utilizadas
 
 ### Backend
 - Python 3.11
@@ -57,7 +57,7 @@ O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidade
 ## 🛠️ Estrutura do Projeto
 
 ```
-python-sistema-cadastro/
+python-peoples-crud/
 ├── backend/                          # API REST em FastAPI
 │   ├── app/                          # Código principal da aplicação
 │   │   ├── core/                     # Configurações e utilitários core
@@ -66,25 +66,66 @@ python-sistema-cadastro/
 │   │   ├── schemas/                  # Schemas Pydantic
 │   │   └── main.py                   # Ponto de entrada da aplicação
 │   ├── scripts/                      # Scripts utilitários
+│   │   ├── create_admin_simple.py    # Cria usuário admin
+│   │   ├── create_fake_pessoas.py    # Gera dados de teste
+│   │   ├── wait-for-postgres.py      # Aguarda DB estar pronto
+│   │   ├── verify_admin.py          # Verifica usuário admin
+│   │   └── init.sh                   # Script de inicialização
 │   ├── Dockerfile                    # Configuração do container
 │   └── requirements.txt              # Dependências Python
 │
 ├── frontend/                         # Interface web em React
-│   ├── src/                          # Código fonte
-│   │   ├── components/               # Componentes React reutilizáveis
-│   │   ├── contexts/                 # Contextos React
-│   │   ├── pages/                    # Páginas da aplicação
-│   │   ├── services/                 # Serviços e integrações
-│   │   ├── App.jsx                   # Componente principal
-│   │   └── main.jsx                  # Ponto de entrada
-│   ├── public/                       # Arquivos públicos
-│   ├── Dockerfile                    # Configuração do container
-│   └── package.json                  # Dependências Node.js
+│   ├── src/                         # Código fonte
+│   │   ├── components/              # Componentes React reutilizáveis
+│   │   ├── contexts/                # Contextos React
+│   │   ├── pages/                   # Páginas da aplicação
+│   │   ├── services/                # Serviços e integrações
+│   │   ├── App.jsx                  # Componente principal
+│   │   └── main.jsx                 # Ponto de entrada
+│   ├── public/                      # Arquivos públicos
+│   ├── Dockerfile                   # Configuração do container
+│   ├── package.json                 # Dependências Node.js
+│   └── vite.config.js               # Configuração do Vite
 │
-├── docker-apocalypse.sh              # Script de limpeza do ambiente Docker
-├── docker-compose.yml                # Configuração dos containers
-└── docs/                             # Documentação e assets
-    └── images/                       # Screenshots e imagens
+├── docs/                            # Documentação e assets
+│   └── images/                      # Screenshots e imagens
+│       ├── login-light.png          # Screenshot tema claro
+│       ├── login-dark.png           # Screenshot tema escuro
+│       └── api-docs.png             # Screenshot documentação API
+│
+├── .env.example                     # Exemplo de variáveis de ambiente
+├── docker-apocalypse.sh             # Script de limpeza do ambiente Docker
+├── docker-compose.yml               # Configuração dos containers
+├── CHANGELOG.md                     # Histórico de mudanças
+└── README.md                        # Documentação principal
+```
+
+## 🔧 Configurações
+
+### Variáveis de Ambiente
+
+O projeto utiliza variáveis de ambiente para configuração. Crie um arquivo `.env` baseado no `.env.example`:
+
+1. Copie o arquivo de exemplo:
+```bash
+cp .env.example .env
+```
+
+2. Configure as variáveis no arquivo `.env`:
+```env
+# Banco de Dados
+POSTGRES_USER=seu_usuario
+POSTGRES_PASSWORD=sua_senha_segura
+POSTGRES_DB=sistema_cadastro
+DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+
+# JWT Authentication
+JWT_SECRET_KEY=sua_chave_secreta_muito_segura
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+# Backend
+BACKEND_CORS_ORIGINS=["http://localhost:5173","http://localhost:3000"]
 ```
 
 ## 🚀 Como Executar
@@ -94,7 +135,7 @@ python-sistema-cadastro/
 1. Clone o repositório:
 ```bash
 git clone <repository-url>
-cd python-sistema-cadastro
+cd python-peoples-crud
 ```
 
 2. Dê permissão de execução ao script de limpeza:
@@ -107,40 +148,14 @@ chmod +x docker-apocalypse.sh
 docker compose up -d
 ```
 
-4. Acesse:
+4. Acesse o sistema:
 - Frontend: http://localhost:5173
-- Backend API: http://localhost:8000
-- Documentação API: http://localhost:8000/docs
+- Documentação API: http://localhost:8000/docs ou http://localhost:8000/redoc
 
 Para limpar completamente o ambiente Docker (use com cautela):
 ```bash
 ./docker-apocalypse.sh
 ```
-
-## 🔧 Configurações
-
-### Backend
-- Python 3.11+
-- FastAPI com dependências otimizadas
-- PostgreSQL 15 para persistência de dados
-- Pydantic para validação de dados
-
-### Frontend
-- React 18
-- Material-UI 5.14.20 (versão estável)
-- Vite para build e desenvolvimento
-- Axios para requisições HTTP
-
-### Docker
-- Containers isolados para cada serviço
-- Script de limpeza com confirmação de segurança
-- Volumes persistentes para dados
-
-## 📱 Acessando o Sistema
-
-- Frontend: http://localhost:5173
-- API Docs: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
 
 ## 🔍 Funcionalidades Principais
 
@@ -169,4 +184,4 @@ Desenvolvido por Michel Dellabeneta 👋
 [![Gmail](https://img.shields.io/badge/-m.dellabeneta@gmail.com-red?style=flat-square&logo=gmail&logoColor=white&link=mailto:m.dellabeneta@gmail.com)](mailto:m.dellabeneta@gmail.com)
 [![Linktree](https://img.shields.io/badge/-Linktree-green?style=flat-square&logo=linktree&logoColor=white&link=https://linktr.ee/dellabeneta)](https://linktr.ee/dellabeneta)
 
-💼 Este projeto de estudos está aberto a colaborações!
+Este projeto de estudos está aberto a colaborações!

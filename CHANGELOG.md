@@ -7,6 +7,20 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não Lançado]
 
+## [1.3.0] - 25/11/2024
+
+### Segurança
+- Remoção de credenciais hardcoded do docker-compose.yml
+- Implementação de variáveis de ambiente para configurações sensíveis
+- Adição de .env.example com template de configuração segura
+- Atualização do sistema de autenticação para usar variáveis de ambiente
+
+### Documentação
+- Reorganização completa do README.md para melhor clareza
+- Adição de instruções detalhadas sobre variáveis de ambiente
+- Remoção de informações redundantes e inconsistências
+- Melhoria na documentação de segurança e configuração
+
 ## [1.2.0] - 24/11/2024
 
 ### Adicionado

@@ -41,7 +41,6 @@ frontend/
 │   ├── App.jsx         # Componente principal
 │   └── main.jsx        # Ponto de entrada
 ├── public/             # Arquivos públicos
-├── Dockerfile         # Configuração do container
 ├── index.html
 └── package.json
 ```
@@ -62,46 +61,15 @@ frontend/
 - `/cadastrar`: Formulário de cadastro
 - `/editar/:id`: Formulário de edição
 
-## Como Executar
-
-### Usando Docker (Recomendado)
-
-1. No diretório raiz do projeto:
-```bash
-docker compose up -d
-```
-
-A aplicação estará disponível em http://localhost:5173
-
-### Desenvolvimento Local
-
-1. Instale as dependências:
-```bash
-npm install
-```
-
-2. Execute o servidor de desenvolvimento:
-```bash
-npm run dev
-```
-
-3. Acesse a aplicação:
-- URL: http://localhost:5173
-
-## Configuração
+## Configuração da API
 
 O frontend está configurado para se conectar ao backend na porta 8000. 
-Certifique-se de que o backend esteja rodando antes de iniciar o frontend.
+A URL base da API pode ser configurada através da variável de ambiente `VITE_API_URL`.
 
-### Temas
+## Temas
 
 O sistema suporta dois temas:
 - Light: Tema claro para uso diurno
 - Dark: Tema escuro para uso noturno
 
 A seleção do tema é persistida no navegador e pode ser alterada através do botão na barra de navegação.
-
-## Docker
-
-O projeto inclui um Dockerfile para criar um container com todas as dependências necessárias.
-Para construir e executar o container, use o docker-compose no diretório raiz do projeto.

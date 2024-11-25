@@ -9,7 +9,6 @@ Sistema de gerenciamento de pessoas desenvolvido com FastAPI e PostgreSQL.
 - **PostgreSQL 15**: Banco de dados
 - **SQLAlchemy**: ORM para banco de dados
 - **Pydantic**: Validação de dados
-- **Docker**: Containerização
 
 ## Dependências
 
@@ -28,37 +27,9 @@ psycopg2-binary==2.9.9
 Faker==20.1.0
 ```
 
-## Como Executar
-
-### Usando Docker (Recomendado)
-
-1. No diretório raiz do projeto:
-```bash
-docker compose up -d
-```
-
-O servidor estará disponível em http://localhost:8000
-
-### Desenvolvimento Local
-
-1. Instale as dependências:
-```bash
-pip install -r requirements.txt
-```
-
-2. Configure as variáveis de ambiente:
-```bash
-export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/sistema_cadastro"
-```
-
-3. Execute o servidor:
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-```
-
 ## Banco de Dados
 
-O sistema utiliza PostgreSQL 15 como banco de dados padrão. A conexão é gerenciada através da variável de ambiente `DATABASE_URL`.
+O sistema utiliza PostgreSQL 15 como banco de dados. A conexão é gerenciada através da variável de ambiente `DATABASE_URL`.
 
 ### Configuração do PostgreSQL
 
@@ -70,18 +41,13 @@ O sistema utiliza PostgreSQL 15 como banco de dados padrão. A conexão é geren
 
 ## Documentação da API
 
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- Swagger UI: /docs
+- ReDoc: /redoc
 
-## Scripts Úteis
+## Scripts Utilitários
 
 - `create_admin_simple.py`: Cria um usuário admin (admin/admin)
 - `create_fake_pessoas.py`: Cria 200 pessoas com dados aleatórios
 - `verify_admin.py`: Verifica se o usuário admin existe
 - `wait-for-postgres.py`: Aguarda o PostgreSQL estar pronto
-- `init.sh`: Script de inicialização que cria admin, dados fake e inicia o servidor
-
-## Docker
-
-O projeto inclui um Dockerfile para criar um container com todas as dependências necessárias.
-Para construir e executar o container, use o docker-compose no diretório raiz do projeto.
+- `init.sh`: Script de inicialização que cria admin e dados fake

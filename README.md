@@ -105,7 +105,7 @@ docker-compose up -d
 - Backend API: http://localhost:8000
 - Documentação API: http://localhost:8000/docs
 
-Para limpar completamente o ambiente Docker (⚠️ use com cautela):
+Para limpar completamente o ambiente Docker (use com cautela):
 ```bash
 ./docker-apocalypse.sh
 ```

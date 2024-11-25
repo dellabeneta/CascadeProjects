@@ -16,6 +16,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: dellabeneta/sistema-cadastro-backend:v1.2.0
     ports:
       - "8000:8000"
     volumes:
@@ -32,6 +33,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    image: dellabeneta/sistema-cadastro-frontend:v1.2.0
     ports:
       - "5173:5173"
     volumes:

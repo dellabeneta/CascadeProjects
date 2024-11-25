@@ -1,16 +1,30 @@
 services:
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=sistema_cadastro
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: dellabeneta/sistema-cadastro-backend:latest
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
-      - ./backend/data:/app/data
     environment:
       - PYTHONPATH=/app
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/sistema_cadastro
+    depends_on:
+      - postgres
     networks:
       - app-network
 
@@ -18,7 +32,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: dellabeneta/sistema-cadastro-frontend:latest
     ports:
       - "5173:5173"
     volumes:
@@ -32,3 +45,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres_data:

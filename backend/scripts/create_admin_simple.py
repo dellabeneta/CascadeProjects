@@ -4,11 +4,14 @@ from app.core.database import Base
 from app.models.user import User
 import os
 
-# Garantir que o diretório data existe
-os.makedirs("./data", exist_ok=True)
+# URL de conexão com o PostgreSQL
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://postgres:postgres@localhost:5432/sistema_cadastro"
+)
 
 # Criar banco e tabelas
-engine = create_engine('sqlite:///./data/sql_app.db')
+engine = create_engine(DATABASE_URL)
 Base.metadata.create_all(engine)
 
 # Criar sessão

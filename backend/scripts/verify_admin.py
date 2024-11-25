@@ -7,10 +7,14 @@ import os
 # Garantir que o diretório data existe
 os.makedirs("./data", exist_ok=True)
 
-# Criar banco e tabelas
-engine = create_engine('sqlite:///./data/sql_app.db')
+# URL de conexão com o PostgreSQL
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://postgres:postgres@localhost:5432/sistema_cadastro"
+)
 
-# Criar sessão
+# Criar engine e sessão
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 db = SessionLocal()
 
@@ -25,4 +29,10 @@ if admin:
 else:
     print("Usuário admin NÃO encontrado!")
 
+# Verificar se há algum usuário no banco
+user_count = db.query(User).count()
+
+print(f"Total de usuários no banco: {user_count}")
+
+# Fechar a sessão
 db.close()

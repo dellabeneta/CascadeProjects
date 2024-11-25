@@ -7,12 +7,6 @@ from datetime import datetime
 backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(backend_dir)
 
-# Muda o diretório de trabalho para o backend para que o SQLite encontre o banco de dados
-os.chdir(backend_dir)
-
-# Garantir que o diretório data existe
-os.makedirs("./data", exist_ok=True)
-
 from app.core.database import SessionLocal, engine, Base
 from app.models.pessoa import Pessoa
 
@@ -56,13 +50,13 @@ def gerar_cpf():
     return f"{cpf_str[:3]}.{cpf_str[3:6]}.{cpf_str[6:9]}-{cpf_str[9:]}"
 
 def gerar_telefone():
-    """Gera um número de celular no formato (XX) 9-XXXX-XXXX"""
+    """Gera um número de telefone"""
     ddd = random.randint(11, 99)
     numero = random.randint(10000000, 99999999)
     return f"({ddd}) 9-{str(numero)[:4]}-{str(numero)[4:]}"
 
 def gerar_data_nascimento():
-    """Gera uma data de nascimento entre 1960 e 2005"""
+    """Gera uma data de nascimento"""
     ano = random.randint(1960, 2005)
     mes = random.randint(1, 12)
     # Ajusta o último dia baseado no mês
@@ -76,7 +70,7 @@ def gerar_data_nascimento():
     return datetime(ano, mes, dia).date()
 
 def gerar_email(nome, sobrenome):
-    """Gera um email baseado no nome"""
+    """Gera um email"""
     # Remove acentos
     from unicodedata import normalize
     nome_limpo = normalize('NFKD', nome.lower()).encode('ASCII', 'ignore').decode('ASCII')
@@ -96,54 +90,54 @@ def gerar_email(nome, sobrenome):
     return f"{email}@{random.choice(dominios)}"
 
 def criar_pessoas(quantidade=200):
-    """Cria a quantidade especificada de pessoas com dados aleatórios"""
-    Base.metadata.create_all(bind=engine)
+    """
+    Cria a quantidade especificada de pessoas com dados aleatórios
+    """
+    # Criar tabelas se não existirem
+    Base.metadata.create_all(engine)
+    
+    # Criar sessão
     db = SessionLocal()
     
-    pessoas_criadas = 0
-    tentativas = 0
-    max_tentativas = quantidade * 2  # Para evitar loop infinito
-    
-    while pessoas_criadas < quantidade and tentativas < max_tentativas:
-        nome = random.choice(nomes)
-        sobrenome = random.choice(sobrenomes)
-        nome_completo = f"{nome} {sobrenome}"
+    try:
+        # Lista para armazenar todas as pessoas antes de fazer o commit
+        pessoas = []
+        emails_usados = set()
+        cpfs_usados = set()
         
-        # Gera CPF único
-        cpf = gerar_cpf()
-        if db.query(Pessoa).filter(Pessoa.cpf == cpf).first():
-            tentativas += 1
-            continue
+        while len(pessoas) < quantidade:
+            nome = random.choice(nomes)
+            sobrenome = random.choice(sobrenomes)
+            email = gerar_email(nome, sobrenome)
+            cpf = gerar_cpf()
+            
+            # Verifica se email ou CPF já foram usados
+            if email in emails_usados or cpf in cpfs_usados:
+                continue
+                
+            emails_usados.add(email)
+            cpfs_usados.add(cpf)
+            
+            pessoa = Pessoa(
+                nome=f"{nome} {sobrenome}",
+                email=email,
+                telefone=gerar_telefone(),
+                cpf=cpf,
+                data_nascimento=gerar_data_nascimento(),
+                ativo=True
+            )
+            pessoas.append(pessoa)
         
-        # Gera email único
-        email = gerar_email(nome, sobrenome)
-        if db.query(Pessoa).filter(Pessoa.email == email).first():
-            tentativas += 1
-            continue
+        # Adiciona todas as pessoas de uma vez
+        db.add_all(pessoas)
+        db.commit()
+        print(f"{quantidade} pessoas criadas com sucesso!")
         
-        pessoa = Pessoa(
-            nome=nome_completo,
-            cpf=cpf,
-            email=email,
-            telefone=gerar_telefone(),
-            data_nascimento=gerar_data_nascimento()
-        )
-        
-        db.add(pessoa)
-        try:
-            db.commit()
-            pessoas_criadas += 1
-            print(f"Pessoa {pessoas_criadas} criada: {nome_completo} - CPF: {cpf}")
-        except Exception as e:
-            print(f"Erro ao criar pessoa: {e}")
-            db.rollback()
-            tentativas += 1
-    
-    db.close()
-    
-    print(f"\nTotal de pessoas criadas: {pessoas_criadas}")
-    if tentativas >= max_tentativas:
-        print("Aviso: Algumas pessoas não puderam ser criadas devido a conflitos de dados únicos")
+    except Exception as e:
+        print(f"Erro ao criar pessoas: {str(e)}")
+        db.rollback()
+    finally:
+        db.close()
 
 if __name__ == "__main__":
     criar_pessoas(200)

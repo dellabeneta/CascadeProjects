@@ -39,11 +39,12 @@ O sistema permite gerenciar cadastros de pessoas com as seguintes funcionalidade
 ## 🚀 Tecnologias Utilizadas
 
 ### Backend
-- Python 3.x
-- FastAPI (Framework web)
-- SQLite (Banco de dados)
+- Python 3.11
+- FastAPI (Framework Web)
+- PostgreSQL (Banco de dados)
 - SQLAlchemy (ORM)
-- Pydantic (Validação de dados)
+- Pydantic
+- Docker
 - Uvicorn (Servidor ASGI)
 
 ### Frontend
@@ -78,13 +79,38 @@ python-sistema-cadastro/
 │   ├── public/           # Arquivos públicos
 │   └── package.json      # Dependências Node.js
 │
+├── docker-apocalypse.sh  # Script de limpeza do ambiente Docker
+├── docker-compose.yml    # Configuração dos containers
 └── docs/                 # Documentação e assets
     └── images/          # Screenshots e imagens
 ```
 
 ## 🚀 Como Executar
 
-### Backend
+### Usando Docker (Recomendado)
+
+1. Clone o repositório:
+```bash
+git clone <repository-url>
+cd python-sistema-cadastro
+```
+
+2. Inicie os containers:
+```bash
+docker-compose up -d
+```
+
+3. Acesse:
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+- Documentação API: http://localhost:8000/docs
+
+Para limpar completamente o ambiente Docker (⚠️ use com cautela):
+```bash
+./docker-apocalypse.sh
+```
+
+### Backend (Desenvolvimento Local)
 
 1. Entre na pasta do backend:
 ```bash
@@ -98,10 +124,10 @@ pip install -r requirements.txt
 
 3. Execute o servidor:
 ```bash
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Frontend
+### Frontend (Desenvolvimento Local)
 
 1. Entre na pasta do frontend:
 ```bash
@@ -117,6 +143,25 @@ npm install
 ```bash
 npm run dev
 ```
+
+## 🔧 Configurações
+
+### Backend
+- Python 3.11+
+- FastAPI com dependências otimizadas
+- PostgreSQL para persistência de dados
+- Pydantic para validação de dados
+
+### Frontend
+- React 18
+- Material-UI 5.14.20 (versão estável)
+- Vite para build e desenvolvimento
+- Axios para requisições HTTP
+
+### Docker
+- Containers isolados para cada serviço
+- Script de limpeza com confirmação de segurança
+- Volumes persistentes para dados
 
 ## 📱 Acessando o Sistema
 

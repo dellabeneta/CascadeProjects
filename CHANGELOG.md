@@ -5,6 +5,37 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [Não Lançado]
+
+### Adicionado
+- Migração do banco de dados de SQLite para PostgreSQL
+- Suporte a múltiplas conexões simultâneas
+- Melhor performance e escalabilidade
+- Confirmação de segurança no script docker-apocalypse.sh
+- Emojis nas mensagens do script docker-apocalypse.sh para melhor visualização
+- Opção de cancelamento no script de limpeza Docker
+
+### Alterado
+- Configuração do banco de dados para usar PostgreSQL
+- Atualização da documentação
+- Simplificação dos scripts de inicialização
+- Atualizado Material-UI para versões estáveis (5.14.20)
+- Otimização das dependências do backend
+- Melhorias na segurança do script docker-apocalypse.sh
+- Atualização da documentação com novas configurações
+
+### Removido
+- Dependência do SQLite
+- Scripts de migração desnecessários
+- Dependências redundantes do backend (pydantic duplicado e bcrypt)
+- Versões beta do Material-UI (@mui/material e @mui/icons-material)
+
+### Segurança
+- Tokens de autenticação agora expiram ao fechar o navegador
+- Melhor gerenciamento de permissões do banco de dados
+- Adicionada confirmação antes da limpeza do ambiente Docker
+- Otimização das dependências para versões mais estáveis
+
 ## [1.1.0] - 2024-01-10
 
 ### Adicionado

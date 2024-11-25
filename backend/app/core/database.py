@@ -3,17 +3,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 
-# Garantir que o diretório data existe
-os.makedirs("./data", exist_ok=True)
-
-# URL de conexão com o SQLite
-SQLALCHEMY_DATABASE_URL = "sqlite:///./data/sql_app.db"
+# URL de conexão com o PostgreSQL
+SQLALCHEMY_DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://postgres:postgres@localhost:5432/sistema_cadastro"
+)
 
 # Criar engine do SQLAlchemy
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 # Criar classe de sessão
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -1,4 +1,4 @@
-# Sistema de Cadastro de Pessoas
+# Sistema de Cadastro de Pessoas (Famigerado CRUD)
 
 Sistema completo para gerenciamento de pessoas, com backend em FastAPI e frontend em React.
 

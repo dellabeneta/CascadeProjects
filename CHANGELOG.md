@@ -7,7 +7,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não Lançado]
 
-## [1.2.0] - 2024-01-24
+## [1.2.0] - 2023-11-24
 
 ### Adicionado
 - Migração do banco de dados de SQLite para PostgreSQL
@@ -38,7 +38,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Adicionada confirmação antes da limpeza do ambiente Docker
 - Otimização das dependências para versões mais estáveis
 
-## [1.1.0] - 2024-01-10
+## [1.1.0] - 2023-11-10
 
 ### Adicionado
 - Script `docker-apocalypse.sh` para limpeza completa do ambiente Docker
@@ -54,7 +54,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Tokens de autenticação agora expiram ao fechar o navegador
 - Melhor gerenciamento de permissões do banco de dados
 
-## [1.0.0] - 2024-01-09
+## [1.0.0] - 2023-11-09
 
 ### Adicionado
 - Implementação de paginação no backend usando FastAPI

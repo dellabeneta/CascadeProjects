@@ -21,6 +21,10 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Remoção de informações redundantes e inconsistências
 - Melhoria na documentação de segurança e configuração
 
+### Alterado
+- Removidas referências às imagens do Docker Hub no docker-compose.yml
+- Configurado para usar apenas builds locais dos containers
+
 ## [1.2.0] - 24/11/2024
 
 ### Adicionado

@@ -16,10 +16,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    # Usar versão específica (recomendado para produção)
-    image: dellabeneta/sistema-cadastro-backend:v1.2.0
-    # Ou usar latest para sempre ter a versão mais recente
-    # image: dellabeneta/sistema-cadastro-backend:latest
     ports:
       - "8000:8000"
     volumes:
@@ -40,10 +36,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    # Usar versão específica (recomendado para produção)
-    image: dellabeneta/sistema-cadastro-frontend:v1.2.0
-    # Ou usar latest para sempre ter a versão mais recente
-    # image: dellabeneta/sistema-cadastro-frontend:latest
     ports:
       - "5173:5173"
     volumes:

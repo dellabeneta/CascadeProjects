@@ -132,6 +132,25 @@ BACKEND_CORS_ORIGINS=["http://localhost:5173","http://localhost:3000"]
 
 ### Usando Docker (Recomendado)
 
+O projeto utiliza apenas builds locais dos containers, garantindo que você sempre execute a versão mais recente do código. No `docker-compose.yml`, a diretiva `build` força a construção local das imagens:
+
+```yaml
+# Exemplo do docker-compose.yml
+backend:
+  build:            # Essa configuração garante build local
+    context: ./backend
+    dockerfile: Dockerfile
+
+frontend:
+  build:            # Essa configuração garante build local
+    context: ./frontend
+    dockerfile: Dockerfile
+```
+
+> **Nota**: O projeto NÃO utiliza imagens pré-construídas do Docker Hub. Todas as imagens são construídas localmente a partir do código fonte.
+
+Para executar:
+
 1. Clone o repositório:
 ```bash
 git clone <repository-url>

@@ -1,6 +1,6 @@
-# Sistema de Cadastro de Pessoas (Famigerado CRUD) e não serve para nada também :)
+# Sistema de Cadastro de Pessoas (é CRUD que fala né?!)
 
-Sistema completo para gerenciamento de pessoas, com backend em FastAPI e frontend em React.
+Castro genérico de pessoas ou coisas, com backend em FastAPI e frontend em React.
 
 ## 📸 Screenshots
 

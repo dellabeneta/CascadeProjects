@@ -7,6 +7,11 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
 ## [Não Lançado]
 
+### Infraestrutura
+- Remoção de referências ao Docker Hub
+- Simplificação do processo de build utilizando apenas builds locais
+- Atualização nos scripts de Docker para melhor manutenibilidade
+
 ## [1.3.0] - 25/11/2024
 
 ### Segurança

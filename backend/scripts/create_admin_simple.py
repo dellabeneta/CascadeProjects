@@ -7,7 +7,7 @@ import os
 # URL de conexão com o PostgreSQL
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://postgres:postgres@localhost:5432/sistema_cadastro"
+    "postgresql://postgres:postgres@postgres:5432/sistema_cadastro"
 )
 
 # Criar banco e tabelas

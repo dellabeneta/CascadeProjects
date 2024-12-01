@@ -1,120 +1,120 @@
-# 🛠 Bitscrafting: Technical Deep Dive
+# 🛠 Bitscrafting: Análise Técnica Detalhada
 
-## 📜 Project Scripting Architecture
+## 📜 Arquitetura de Scripts do Projeto
 
-### Scripts Overview
+### Visão Geral dos Scripts
 
 #### 1. `scripts/environment.sh`
-**Purpose**: Comprehensive environment management script
+**Objetivo**: Script abrangente para gerenciamento de ambiente
 
-**Key Features**:
-- Multi-environment support (dev, qa, prod)
-- Dynamic environment variable loading
-- Docker Compose orchestration
-- Resource URL display after startup
+**Principais Recursos**:
+- Suporte a múltiplos ambientes (dev, qa, prod)
+- Carregamento dinâmico de variáveis de ambiente
+- Orquestração com Docker Compose
+- Exibição de URLs de recursos após a inicialização
 
-**Workflow**:
+**Fluxo de Trabalho**:
 ```bash
-# Start environment
+# Iniciar ambiente
 ./scripts/environment.sh start dev
 
-# Stop environment
+# Parar ambiente
 ./scripts/environment.sh stop dev
 ```
 
-**Environment Variable Loading**:
-- Loads base environment: `config/base/.env.base`
-- Loads specific environment config: `config/environments/{env}/.env.{env}`
+**Carregamento de Variáveis de Ambiente**:
+- Carrega ambiente base: `config/base/.env.base`
+- Carrega configuração específica do ambiente: `config/environments/{env}/.env.{env}`
 
 #### 2. `Makefile`
-**Purpose**: Simplified command interface for development tasks
+**Objetivo**: Interface de comandos simplificada para tarefas de desenvolvimento
 
-**Available Targets**:
-- `dev-up`: Start development environment
-- `dev-down`: Stop development environment
-- `dev-logs`: View container logs
-- `dev-shell`: Access backend container shell
-- `clean`: Prune Docker resources
+**Comandos Disponíveis**:
+- `dev-up`: Iniciar ambiente de desenvolvimento
+- `dev-down`: Parar ambiente de desenvolvimento
+- `dev-logs`: Visualizar logs dos contêineres
+- `dev-shell`: Acessar shell do contêiner backend
+- `clean`: Limpar recursos Docker
 
-**Usage Examples**:
+**Exemplos de Uso**:
 ```bash
-# Start dev environment
+# Iniciar ambiente de desenvolvimento
 make dev-up
 
-# Stop dev environment
+# Parar ambiente de desenvolvimento
 make dev-down
 
-# Access backend shell
+# Acessar shell do backend
 make dev-shell
 ```
 
 #### 3. `docker-apocalypse.sh`
-**Purpose**: Comprehensive Docker environment cleanup
+**Objetivo**: Limpeza abrangente do ambiente Docker
 
-**Functionality**:
-- Stops all running containers
-- Removes all containers
-- Removes all images
-- Removes all volumes
-- Removes all networks
+**Funcionalidade**:
+- Para todos os contêineres em execução
+- Remove todos os contêineres
+- Remove todas as imagens
+- Remove todos os volumes
+- Remove todas as redes
 
-**Caution**: Destructive operation, use carefully
+**Cuidado**: Operação destrutiva, use com cuidado
 
-**Recommended Usage**:
+**Uso Recomendado**:
 ```bash
-# Give execution permission
+# Dar permissão de execução
 chmod +x docker-apocalypse.sh
 
-# Run cleanup
+# Executar limpeza
 ./docker-apocalypse.sh
 ```
 
-### 🔧 Technical Considerations
+### 🔧 Considerações Técnicas
 
-#### Environment Initialization Flow
-1. `environment.sh` script is called
-2. Environment-specific `.env` files are loaded
-3. Docker Compose files are merged
-4. Containers are built and started
-5. Resources URLs are displayed
+#### Fluxo de Inicialização do Ambiente
+1. O script `environment.sh` é chamado
+2. Arquivos `.env` específicos do ambiente são carregados
+3. Arquivos de configuração do Docker Compose são mesclados
+4. Contêineres são construídos e iniciados
+5. URLs dos recursos são exibidas
 
-#### Docker Compose Configuration
-- Base configuration: `config/base/docker-compose.base.yml`
-- Environment-specific: `config/environments/{env}/docker-compose.{env}.yml`
+#### Configuração do Docker Compose
+- Configuração base: `config/base/docker-compose.base.yml`
+- Configuração específica do ambiente: `config/environments/{env}/docker-compose.{env}.yml`
 
-### 🚨 Best Practices
+### 🚨 Práticas Recomendadas
 
-1. **Never commit sensitive information**
-   - Use `.env.example` as a template
-   - Keep real `.env` files in `.gitignore`
+1. **Nunca comite informações sensíveis**
+   - Use `.env.example` como modelo
+   - Mantenha arquivos `.env` reais no `.gitignore`
 
-2. **Consistent Environment Management**
-   - Always use `./scripts/environment.sh` for environment control
-   - Avoid manual Docker Compose commands
+2. **Gerenciamento de Ambiente Consistente**
+   - Sempre use `./scripts/environment.sh` para controle do ambiente
+   - Evite comandos manuais do Docker Compose
 
-3. **Resource Cleanup**
-   - Use `docker-apocalypse.sh` for complete reset
-   - Be cautious with data volumes
+3. **Limpeza de Recursos**
+   - Use `docker-apocalypse.sh` para reset completo
+   - Seja cuidadoso com volumes de dados
 
-### 🔍 Debugging Tips
+### 🔍 Dicas de Depuração
 
-- Check container logs: `make dev-logs`
-- Access container shell: `make dev-shell`
-- Verify environment variables: Review `.env` files
+- Verifique logs dos contêineres: `make dev-logs`
+- Acesse shell do contêiner: `make dev-shell`
+- Verifique variáveis de ambiente: Revise arquivos `.env`
 
-### 📊 Performance Optimization
+### 📊 Otimização de Desempenho
 
-- Use multi-stage Docker builds
-- Minimize layer count in Dockerfiles
-- Use `.dockerignore` to reduce build context
+- Use builds de múltiplos estágios do Docker
+- Minimize a contagem de camadas nos Dockerfiles
+- Use `.dockerignore` para reduzir o contexto de build
 
-## 🤝 Contributing to Scripting
+## 🤝 Contribuindo para a Arquitetura de Scripts
 
-1. Maintain script readability
-2. Add comments explaining complex logic
-3. Follow existing naming conventions
-4. Test scripts in different environments
+1. Mantenha a legibilidade dos scripts
+2. Adicione comentários explicando lógica complexa
+3. Siga convenções de nomenclatura existentes
+4. Teste scripts em diferentes ambientes
 
-## 📝 Notes
+## 📝 Notas
 
-This document provides insights into the project's scripting architecture. Always refer to the latest version of scripts and configurations.
+Este documento fornece insights sobre a arquitetura de scripts do projeto. Sempre consulte a versão mais recente dos scripts e configurações.

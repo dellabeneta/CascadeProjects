@@ -5,12 +5,37 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
-## [Não Lançado]
+## [2.0.0] - 27/11/2024
 
-### Infraestrutura
-- Remoção de referências ao Docker Hub
-- Simplificação do processo de build utilizando apenas builds locais
-- Atualização nos scripts de Docker para melhor manutenibilidade
+### ⚠️ Breaking Changes
+- Refatoração completa da arquitetura do projeto
+- Nova estrutura de diretórios mais organizada
+- Sistema de autenticação totalmente renovado
+
+### ✨ Adicionado
+- Nova interface com suporte a temas light/dark
+- Sistema de busca avançado com filtros
+- Documentação técnica detalhada (BITSCRAFTING.md)
+- Novo sistema de logs e monitoramento
+- Scripts de desenvolvimento aprimorados
+
+### 🔧 Modificado
+- Atualização de todas as dependências para versões mais recentes
+- Melhoria significativa na performance do backend
+- Interface mais intuitiva e responsiva
+- Sistema de validação mais robusto
+- Documentação completamente revisada
+
+### 🔒 Segurança
+- Novo sistema de autenticação JWT
+- Melhor gerenciamento de sessões
+- Proteção contra ataques comuns
+- Validações mais rigorosas de entrada
+
+### 🧹 Removido
+- Código legado não utilizado
+- Dependências obsoletas
+- Scripts redundantes
 
 ## [1.3.0] - 25/11/2024
 

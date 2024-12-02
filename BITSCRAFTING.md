@@ -1,120 +1,155 @@
-# 🛠 Bitscrafting: Análise Técnica Detalhada
+# 🛠 Bitscrafting: Guia Técnico do Projeto
 
-## 📜 Arquitetura de Scripts do Projeto
+## 📑 Índice
+1. [Arquitetura do Projeto](#arquitetura-do-projeto)
+2. [Scripts e Automação](#scripts-e-automação)
+3. [Ambientes e Configuração](#ambientes-e-configuração)
+4. [Práticas de Desenvolvimento](#práticas-de-desenvolvimento)
+5. [Troubleshooting](#troubleshooting)
 
-### Visão Geral dos Scripts
+## 🏗 Arquitetura do Projeto
 
-#### 1. `scripts/environment.sh`
-**Objetivo**: Script abrangente para gerenciamento de ambiente
+### Backend (FastAPI)
+- **Estrutura de Diretórios**:
+  ```
+  backend/
+  ├── app/
+  │   ├── api/         # Rotas e endpoints
+  │   ├── core/        # Configurações centrais
+  │   ├── models/      # Modelos SQLAlchemy
+  │   ├── schemas/     # Schemas Pydantic
+  │   └── services/    # Lógica de negócio
+  ```
 
-**Principais Recursos**:
-- Suporte a múltiplos ambientes (dev, qa, prod)
-- Carregamento dinâmico de variáveis de ambiente
-- Orquestração com Docker Compose
-- Exibição de URLs de recursos após a inicialização
+### Frontend (React)
+- **Estrutura de Diretórios**:
+  ```
+  frontend/
+  ├── src/
+  │   ├── components/  # Componentes React
+  │   ├── hooks/       # Custom hooks
+  │   ├── pages/       # Páginas da aplicação
+  │   ├── services/    # Serviços e API
+  │   └── theme/       # Configuração de tema
+  ```
 
-**Fluxo de Trabalho**:
+## 🤖 Scripts e Automação
+
+### 1. Scripts Principais
+
+#### `environment.sh`
 ```bash
-# Iniciar ambiente
-./scripts/environment.sh start dev
+./scripts/environment.sh <comando> <ambiente>
+```
+- **Comandos**: start, stop, restart
+- **Ambientes**: dev, qa, prod
+- **Variáveis**: Carrega automaticamente do diretório config/
 
-# Parar ambiente
-./scripts/environment.sh stop dev
+#### `docker-apocalypse.sh`
+- **Uso**: Limpeza completa do ambiente Docker
+- **Cuidado**: Remove TODOS os recursos Docker
+- **Recomendação**: Use apenas em desenvolvimento
+
+### 2. Makefile
+```makefile
+dev-up      # Inicia ambiente de desenvolvimento
+dev-down    # Para ambiente de desenvolvimento
+dev-logs    # Visualiza logs dos containers
+dev-shell   # Acessa shell do backend
+clean       # Limpa recursos Docker
 ```
 
-**Carregamento de Variáveis de Ambiente**:
-- Carrega ambiente base: `config/base/.env.base`
-- Carrega configuração específica do ambiente: `config/environments/{env}/.env.{env}`
+## ⚙️ Ambientes e Configuração
 
-#### 2. `Makefile`
-**Objetivo**: Interface de comandos simplificada para tarefas de desenvolvimento
-
-**Comandos Disponíveis**:
-- `dev-up`: Iniciar ambiente de desenvolvimento
-- `dev-down`: Parar ambiente de desenvolvimento
-- `dev-logs`: Visualizar logs dos contêineres
-- `dev-shell`: Acessar shell do contêiner backend
-- `clean`: Limpar recursos Docker
-
-**Exemplos de Uso**:
-```bash
-# Iniciar ambiente de desenvolvimento
-make dev-up
-
-# Parar ambiente de desenvolvimento
-make dev-down
-
-# Acessar shell do backend
-make dev-shell
+### Estrutura de Configuração
+```
+config/
+├── base/
+│   ├── .env.base
+│   └── docker-compose.base.yml
+└── environments/
+    ├── dev/
+    │   ├── .env.dev
+    │   └── docker-compose.dev.yml
+    ├── qa/
+    └── prod/
 ```
 
-#### 3. `docker-apocalypse.sh`
-**Objetivo**: Limpeza abrangente do ambiente Docker
+### Variáveis de Ambiente
+- **Base**: Configurações comuns a todos ambientes
+- **Ambiente-específico**: Sobrescreve configurações base
+- **Sensíveis**: Nunca commitar .env reais
 
-**Funcionalidade**:
-- Para todos os contêineres em execução
-- Remove todos os contêineres
-- Remove todas as imagens
-- Remove todos os volumes
-- Remove todas as redes
+## 👨‍💻 Práticas de Desenvolvimento
 
-**Cuidado**: Operação destrutiva, use com cuidado
+### Backend
+1. **Padrões de Código**
+   - Use Type Hints
+   - Docstrings em funções públicas
+   - Testes para novas funcionalidades
 
-**Uso Recomendado**:
-```bash
-# Dar permissão de execução
-chmod +x docker-apocalypse.sh
+2. **Banco de Dados**
+   - Use migrations para alterações
+   - Evite queries raw
+   - Mantenha índices otimizados
 
-# Executar limpeza
-./docker-apocalypse.sh
-```
+### Frontend
+1. **Componentes**
+   - Componentização atômica
+   - Props typing
+   - Memoização quando necessário
 
-### 🔧 Considerações Técnicas
+2. **Estado**
+   - Use React Query para cache
+   - Context API para estado global
+   - Local state quando possível
 
-#### Fluxo de Inicialização do Ambiente
-1. O script `environment.sh` é chamado
-2. Arquivos `.env` específicos do ambiente são carregados
-3. Arquivos de configuração do Docker Compose são mesclados
-4. Contêineres são construídos e iniciados
-5. URLs dos recursos são exibidas
+## 🔍 Troubleshooting
 
-#### Configuração do Docker Compose
-- Configuração base: `config/base/docker-compose.base.yml`
-- Configuração específica do ambiente: `config/environments/{env}/docker-compose.{env}.yml`
+### Problemas Comuns
 
-### 🚨 Práticas Recomendadas
+1. **Containers não iniciam**
+   ```bash
+   # Verifique logs
+   make dev-logs
+   
+   # Verifique portas em uso
+   sudo lsof -i :5173
+   sudo lsof -i :8000
+   ```
 
-1. **Nunca comite informações sensíveis**
-   - Use `.env.example` como modelo
-   - Mantenha arquivos `.env` reais no `.gitignore`
+2. **Erro de permissão**
+   ```bash
+   # Ajuste permissões Docker
+   sudo usermod -aG docker $USER
+   newgrp docker
+   ```
 
-2. **Gerenciamento de Ambiente Consistente**
-   - Sempre use `./scripts/environment.sh` para controle do ambiente
-   - Evite comandos manuais do Docker Compose
+3. **Banco de dados**
+   ```bash
+   # Acesse PostgreSQL
+   make dev-shell
+   python -m scripts.verify_admin
+   ```
 
-3. **Limpeza de Recursos**
-   - Use `docker-apocalypse.sh` para reset completo
-   - Seja cuidadoso com volumes de dados
+### Logs e Monitoramento
+- Use `make dev-logs` para todos containers
+- Verifique `/backend/logs` para logs específicos
+- Monitor Docker stats: `docker stats`
 
-### 🔍 Dicas de Depuração
+## 📝 Notas de Desenvolvimento
 
-- Verifique logs dos contêineres: `make dev-logs`
-- Acesse shell do contêiner: `make dev-shell`
-- Verifique variáveis de ambiente: Revise arquivos `.env`
+1. **Pull Requests**
+   - Mantenha mudanças focadas
+   - Inclua testes
+   - Atualize documentação
 
-### 📊 Otimização de Desempenho
+2. **Segurança**
+   - Nunca commite credenciais
+   - Mantenha dependências atualizadas
+   - Revise permissões de arquivos
 
-- Use builds de múltiplos estágios do Docker
-- Minimize a contagem de camadas nos Dockerfiles
-- Use `.dockerignore` para reduzir o contexto de build
-
-## 🤝 Contribuindo para a Arquitetura de Scripts
-
-1. Mantenha a legibilidade dos scripts
-2. Adicione comentários explicando lógica complexa
-3. Siga convenções de nomenclatura existentes
-4. Teste scripts em diferentes ambientes
-
-## 📝 Notas
-
-Este documento fornece insights sobre a arquitetura de scripts do projeto. Sempre consulte a versão mais recente dos scripts e configurações.
+3. **Performance**
+   - Profile endpoints lentos
+   - Otimize queries N+1
+   - Monitore uso de memória

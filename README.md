@@ -8,11 +8,13 @@ Sistema completo para cadastro e gerenciamento de pessoas, oferecendo uma experi
 
 ## ✨ Recursos Principais
 
-- Cadastro de pessoas
-- Edição de registros
-- Exclusão de dados
-- Interface responsiva
+- Sistema completo de autenticação e autorização
+- CRUD completo de pessoas com validações
+- Interface moderna e responsiva com Material-UI
 - Suporte a temas light e dark
+- Documentação interativa da API com Swagger/OpenAPI
+- Containerização completa com Docker
+- Ambiente de desenvolvimento otimizado
 
 ## 📸 Interface
 
@@ -43,10 +45,23 @@ Interface Swagger para exploração dos endpoints:
 
 ## 🛠 Tecnologias
 
-- **Backend**: Python, FastAPI
-- **Frontend**: React
-- **Banco de Dados**: PostgreSQL
-- **Containerização**: Docker
+### Backend
+- **Framework**: FastAPI
+- **Linguagem**: Python 3.11+
+- **ORM**: SQLAlchemy
+- **Autenticação**: JWT
+- **Documentação**: OpenAPI (Swagger)
+
+### Frontend
+- **Framework**: React 18
+- **Estilização**: Material-UI
+- **Gerenciamento de Estado**: React Query
+- **Formulários**: React Hook Form
+
+### Infraestrutura
+- **Banco de Dados**: PostgreSQL 15
+- **Containerização**: Docker & Docker Compose
+- **CI/CD**: GitHub Actions
 
 ## 🏁 Começando
 
@@ -88,22 +103,83 @@ Antes de começar, certifique-se de que seu ambiente atenda aos seguintes requis
 - Usuário deve ter permissões para executar comandos Docker
 - Recomenda-se fechar outros containers ou aplicações que possam conflitar
 
-### Instalação Rápida
+### 🚀 Iniciando o Projeto
+
+1. **Clone o Repositório**
+   ```bash
+   git clone https://github.com/dellabeneta/python-peoples-crud.git
+   cd python-peoples-crud
+   ```
+
+2. **Configure o Ambiente**
+   ```bash
+   # Copie o arquivo de exemplo de variáveis de ambiente
+   cp .env.example .env
+   
+   # Ajuste as variáveis conforme necessário
+   nano .env
+   ```
+
+3. **Inicie o Ambiente de Desenvolvimento**
+   ```bash
+   # Usando o script de ambiente
+   ./scripts/environment.sh start dev
+   
+   # OU usando make
+   make dev-up
+   ```
+
+4. **Acesse a Aplicação**
+   - Frontend: http://localhost:5173
+   - API Docs: http://localhost:8000/docs
+   - Admin: http://localhost:8000/admin
+
+### 🔑 Credenciais Padrão
+
+Para acessar o sistema pela primeira vez, use as seguintes credenciais de administrador:
+
+```
+Username: admin
+Password: admin
+Email: admin@example.com
+```
+
+**Importante**: Por segurança, recomenda-se alterar a senha do administrador após o primeiro acesso.
+
+### 📚 Documentação Adicional
+
+- [Guia de Desenvolvimento](./BITSCRAFTING.md)
+- [Changelog](./CHANGELOG.md)
+- [Contribuição](./CONTRIBUTING.md)
+
+### 🔧 Comandos Úteis
 
 ```bash
-# Clonar o repositório
-git clone https://github.com/dellabeneta/python-peoples-crud.git
+# Visualizar logs
+make dev-logs
 
-# Entrar no diretório
-cd python-peoples-crud
+# Acessar shell do backend
+make dev-shell
 
-# Iniciar ambiente de desenvolvimento
-./scripts/environment.sh start dev
+# Parar o ambiente
+make dev-down
+
+# Limpar todos os recursos Docker
+./docker-apocalypse.sh
 ```
+
+### 🤝 Como Contribuir
+
+1. Faça um Fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
 ## 🤝 Contribuição
 
 Contribuições são bem-vindas!
+
 ## 📄 Licença
 
 Este projeto está sob licença MIT.

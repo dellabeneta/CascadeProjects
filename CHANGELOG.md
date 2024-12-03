@@ -18,6 +18,7 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 - Documentação técnica detalhada (BITSCRAFTING.md)
 - Novo sistema de logs e monitoramento
 - Scripts de desenvolvimento aprimorados
+- Coluna de CPF adicionada na listagem de pessoas
 
 ### 🔧 Modificado
 - Atualização de todas as dependências para versões mais recentes

@@ -104,7 +104,7 @@ config/
    - Context API para estado global
    - Local state quando possível
 
-## 🔍 Troubleshooting
+# Troubleshooting
 
 ### Problemas Comuns
 

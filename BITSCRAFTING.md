@@ -7,7 +7,7 @@
 4. [Práticas de Desenvolvimento](#práticas-de-desenvolvimento)
 5. [Troubleshooting](#troubleshooting)
 
-## 🏗 Arquitetura do Projeto
+# 🏗 Arquitetura do Projeto
 
 ### Backend (FastAPI)
 - **Estrutura de Diretórios**:

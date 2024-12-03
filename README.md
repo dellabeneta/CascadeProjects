@@ -44,25 +44,6 @@ Esta é uma aplicação completa de Gerenciamento de Pessoas, desenvolvida com u
 - PostgreSQL 12+
 - **Make** (para configuração rápida do projeto)
 
-### Instalação de Pré-requisitos
-
-#### Linux (Ubuntu/Debian)
-```bash
-# Instalar Make
-sudo apt-get update
-sudo apt-get install make
-```
-
-#### macOS (com Homebrew)
-```bash
-# Instalar Make
-brew install make
-```
-
-#### Windows
-- Instalar [MinGW](https://sourceforge.net/projects/mingw-w64/) ou [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/pt-br/windows/wsl/install)
-- Ou usar Git Bash que já vem com Make
-
 ### Dependências
 - Todas as dependências do Python estão listadas em `backend/requirements.txt`
 - Dependências do frontend estão em `frontend/package.json`

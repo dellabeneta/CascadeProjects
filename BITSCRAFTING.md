@@ -5,9 +5,9 @@
 2. [Scripts e Automação](#scripts-e-automação)
 3. [Ambientes e Configuração](#ambientes-e-configuração)
 4. [Práticas de Desenvolvimento](#práticas-de-desenvolvimento)
-5. [Troubleshooting](##troubleshooting)
+5. [Troubleshooting](#troubleshooting)
 
-# 🏗 Arquitetura do Projeto
+# Arquitetura do Projeto
 
 ### Backend (FastAPI)
 - **Estrutura de Diretórios**:
@@ -59,7 +59,7 @@ dev-shell   # Acessa shell do backend
 clean       # Limpa recursos Docker
 ```
 
-## ⚙️ Ambientes e Configuração
+# Ambientes e Configuração
 
 ### Estrutura de Configuração
 ```
@@ -80,7 +80,7 @@ config/
 - **Ambiente-específico**: Sobrescreve configurações base
 - **Sensíveis**: Nunca commitar .env reais
 
-## 👨‍💻 Práticas de Desenvolvimento
+# Práticas de Desenvolvimento
 
 ### Backend
 1. **Padrões de Código**
@@ -104,7 +104,7 @@ config/
    - Context API para estado global
    - Local state quando possível
 
-## Troubleshooting
+# Troubleshooting
 
 ### Problemas Comuns
 

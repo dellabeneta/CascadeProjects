@@ -1,8 +1,8 @@
-# Gerenciamento de Pessoas - Aplicação CRUD
+# Cadastro de Pessoas - API e Frontend
 
 ## Descrição do Projeto
 
-Esta é uma aplicação completa de Gerenciamento de Pessoas, desenvolvida com uma arquitetura moderna de pilha completa (full-stack), utilizando:
+Esta é uma aplicação completa de Cadastro de Pessoas, desenvolvida com uma arquitetura moderna de pilha completa (full-stack), utilizando:
 - Backend: Python com FastAPI
 - Frontend: React com Vite
 - Banco de Dados: PostgreSQL

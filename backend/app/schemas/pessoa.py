@@ -16,49 +16,25 @@ class PessoaBase(BaseModel):
     def parse_data_nascimento(cls, v):
         if isinstance(v, str):
             try:
-                # Tenta converter do formato dd/mm/yyyy
+                # Aceitar apenas formato dd/mm/yyyy
                 return datetime.strptime(v, "%d/%m/%Y").date()
             except ValueError:
-                try:
-                    # Se falhar, tenta o formato ISO (yyyy-mm-dd)
-                    return datetime.strptime(v, "%Y-%m-%d").date()
-                except ValueError:
-                    raise ValueError("Data deve estar no formato dd/mm/yyyy ou yyyy-mm-dd")
+                raise ValueError("Data deve estar no formato dd/mm/yyyy")
         return v
 
     @validator('cpf')
     def validate_cpf(cls, v):
-        # Remove caracteres não numéricos
-        cpf = re.sub(r'\D', '', v)
-        
-        if len(cpf) != 11:
-            raise ValueError('CPF deve ter 11 dígitos')
-            
-        # Verifica se todos os dígitos são iguais
-        if len(set(cpf)) == 1:
-            raise ValueError('CPF inválido')
-            
-        # Validação do primeiro dígito verificador
-        soma = 0
-        for i in range(9):
-            soma += int(cpf[i]) * (10 - i)
-        resto = (soma * 10) % 11
-        if resto == 10:
-            resto = 0
-        if resto != int(cpf[9]):
-            raise ValueError('CPF inválido')
-            
-        # Validação do segundo dígito verificador
-        soma = 0
-        for i in range(10):
-            soma += int(cpf[i]) * (11 - i)
-        resto = (soma * 10) % 11
-        if resto == 10:
-            resto = 0
-        if resto != int(cpf[10]):
-            raise ValueError('CPF inválido')
-            
-        return f'{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}'
+        # Garantir que o CPF está no formato correto
+        if not re.match(r"\d{3}\.\d{3}\.\d{3}-\d{2}", v):
+            raise ValueError("CPF deve estar no formato 000.000.000-00")
+        return v
+
+    @validator('telefone')
+    def validate_telefone(cls, v):
+        # Garantir que o telefone está no formato correto
+        if not re.match(r"\(\d{2}\) \d-\d{4}-\d{4}", v):
+            raise ValueError("Telefone deve estar no formato (XX) X-XXXX-XXXX")
+        return v
 
 class PessoaCreate(PessoaBase):
     """Schema para criação de pessoa - herda todos os campos do PessoaBase"""

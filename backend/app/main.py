@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.database import engine, Base
+from app.core.database import engine, Base, SessionLocal
 from app.routes import pessoa, auth
+from app.core.init_admin import ensure_master_user
 
 # Criar as tabelas no banco de dados
 Base.metadata.create_all(bind=engine)
@@ -22,6 +23,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Criar usuário master na inicialização
+db = SessionLocal()
+try:
+    ensure_master_user(db)
+finally:
+    db.close()
 
 # Incluir as rotas
 app.include_router(auth.router, prefix="/auth", tags=["authentication"])

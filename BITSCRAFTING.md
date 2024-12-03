@@ -5,7 +5,7 @@
 2. [Scripts e Automação](#scripts-e-automação)
 3. [Ambientes e Configuração](#ambientes-e-configuração)
 4. [Práticas de Desenvolvimento](#práticas-de-desenvolvimento)
-5. [Troubleshooting](#troubleshooting)
+5. [Troubleshooting](##troubleshooting)
 
 # 🏗 Arquitetura do Projeto
 
@@ -104,7 +104,7 @@ config/
    - Context API para estado global
    - Local state quando possível
 
-# Troubleshooting
+## Troubleshooting
 
 ### Problemas Comuns
 

@@ -133,6 +133,7 @@ function ListaPessoas() {
             <TableRow>
               <TableCell>Nome</TableCell>
               <TableCell>Email</TableCell>
+              <TableCell>CPF</TableCell>
               <TableCell>Telefone</TableCell>
               <TableCell>Data de Nascimento</TableCell>
               <TableCell>Status</TableCell>
@@ -144,6 +145,7 @@ function ListaPessoas() {
               <TableRow key={pessoa.id}>
                 <TableCell>{pessoa.nome}</TableCell>
                 <TableCell>{pessoa.email}</TableCell>
+                <TableCell>{pessoa.cpf}</TableCell>
                 <TableCell>{pessoa.telefone}</TableCell>
                 <TableCell>{formatarData(pessoa.data_nascimento)}</TableCell>
                 <TableCell>{pessoa.ativo ? 'Ativo' : 'Inativo'}</TableCell>

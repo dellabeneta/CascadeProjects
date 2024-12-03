@@ -69,6 +69,10 @@ main() {
     echo -e "Removendo todas as redes..."
     docker network rm $(docker network ls -q) 2>/dev/null || true
 
+    # Executa um Prune no Docker System
+    echo -e "Removendo caches com prune..."
+    docker system prune --all --volumes --force 2>/dev/null || true
+
     echo
     echo -e "${GREEN}Limpeza do Docker concluída com sucesso!${NC}"
 }

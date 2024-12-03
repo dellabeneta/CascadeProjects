@@ -2,7 +2,7 @@
 
 ## 📑 Índice
 1. [Arquitetura do Projeto](##arquitetura-do-projeto)
-2. [Scripts e Automação](##scripts-e-automação)
+2. [Scripts e Automação](## scripts-e-automação)
 3. [Ambientes e Configuração](#ambientes-e-configuração)
 4. [Práticas de Desenvolvimento](#práticas-de-desenvolvimento)
 5. [Troubleshooting](#troubleshooting)

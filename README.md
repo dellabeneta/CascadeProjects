@@ -42,6 +42,26 @@ Esta é uma aplicação completa de Gerenciamento de Pessoas, desenvolvida com u
 - Node.js 18+
 - npm 9+
 - PostgreSQL 12+
+- **Make** (para configuração rápida do projeto)
+
+### Instalação de Pré-requisitos
+
+#### Linux (Ubuntu/Debian)
+```bash
+# Instalar Make
+sudo apt-get update
+sudo apt-get install make
+```
+
+#### macOS (com Homebrew)
+```bash
+# Instalar Make
+brew install make
+```
+
+#### Windows
+- Instalar [MinGW](https://sourceforge.net/projects/mingw-w64/) ou [Windows Subsystem for Linux (WSL)](https://docs.microsoft.com/pt-br/windows/wsl/install)
+- Ou usar Git Bash que já vem com Make
 
 ### Dependências
 - Todas as dependências do Python estão listadas em `backend/requirements.txt`
@@ -49,38 +69,82 @@ Esta é uma aplicação completa de Gerenciamento de Pessoas, desenvolvida com u
 
 ## Configuração do Projeto
 
-### Configuração Recomendada (Ambiente Virtual)
+### 🚀 Método Rápido: Usando Make
 
-1. Clonar o Repositório
+⚠️ **Importante: Leia o Makefile Antes de Usar**
+
+O projeto fornece um `Makefile` para configuração e execução rápida. **Recomendamos fortemente ler o arquivo `Makefile` completamente antes de executar qualquer comando.**
+
 ```bash
+# Clonar o repositório
 git clone https://github.com/seu-usuario/python-peoples-crud.git
 cd python-peoples-crud
+
+# Instalar todas as dependências (backend e frontend)
+make install
+
+# Iniciar backend e frontend simultaneamente
+make run-all
 ```
 
-2. Configurar Backend
-```bash
-# Criar ambiente virtual (opcional, mas recomendado)
-python3 -m venv venv
-source venv/bin/activate  # No Windows use: venv\Scripts\activate
+#### ⚠️ Aviso Importante sobre Make
+- O Makefile usa `--break-system-packages`, o que pode causar conflitos no ambiente Python
+- **Recomendado apenas para desenvolvedores experientes**
+- Usuários menos experientes devem seguir o método manual de instalação
 
-# Instalar dependências
+### 🛠 Método Manual de Instalação
+
+Se preferir mais controle ou evitar potenciais conflitos de pacotes, siga o método manual:
+
+#### 1. Configurar Backend (Python)
+
+```bash
+# Clonar o repositório
+git clone https://github.com/seu-usuario/python-peoples-crud.git
+cd python-peoples-crud
+
+# Criar e ativar ambiente virtual (RECOMENDADO)
+python3 -m venv venv
+source venv/bin/activate  # No Windows: venv\Scripts\activate
+
+# Instalar dependências do backend
 cd backend
 pip install -r requirements.txt
 
 # Configurar variáveis de ambiente
 cp .env.example .env
-# Edite o .env com suas configurações
+# Edite o .env com suas configurações de banco de dados
+
+# Iniciar servidor backend
+uvicorn app.main:app --reload --port 8000
 ```
 
-3. Configurar Banco de Dados
-- Crie um banco de dados PostgreSQL
-- Atualize as credenciais no arquivo `.env`
+#### 2. Configurar Frontend (React)
 
-4. Configurar Frontend
 ```bash
-cd ../frontend
+# Na raiz do projeto ou em outro terminal
+cd frontend
+
+# Instalar dependências do frontend
 npm install
+
+# Iniciar servidor de desenvolvimento do frontend
+npm run dev
 ```
+
+### 🔍 Ordem de Inicialização
+
+**Ordem Recomendada:**
+1. Iniciar o Backend (Python/FastAPI)
+2. Iniciar o Frontend (React)
+
+Isso garante que o backend esteja disponível antes que o frontend tente fazer requisições.
+
+### 💡 Dicas Adicionais
+
+- Sempre verifique as variáveis de ambiente no `.env`
+- Certifique-se de que o PostgreSQL está rodando
+- Verifique as versões das dependências nos arquivos `requirements.txt` e `package.json`
 
 ## Executando o Projeto
 
@@ -141,10 +205,37 @@ Copie `.env.example` para `.env` e configure:
 - Confirme que as variáveis de ambiente estão configuradas corretamente
 - Consulte os logs do backend e frontend em caso de erros
 
-## Licença
+## Contato e Suporte
 
-[Especifique a licença do projeto]
+### Autor
+- **Nome**: Michel Torres Dellabeneta
+- **Email**: m.dellabeneta@gmail.com
+- **LinkedIn**: https://www.linkedin.com/in/mdellabeneta/
 
-## Contato
+## 🎨 Interface do Usuário
 
-[Adicione informações de contato ou link para issues]
+### Temas Dinâmicos
+
+A aplicação oferece suporte a dois temas elegantes para melhorar a experiência do usuário:
+
+#### Tema Claro
+![Interface em Tema Claro](/docs/images/login-light.png)
+
+#### Tema Escuro
+![Interface em Tema Escuro](/docs/images/login-dark.png)
+
+Os temas podem ser alternados facilmente, proporcionando:
+- Conforto visual em diferentes condições de iluminação
+- Redução da fadiga ocular
+- Personalização da experiência do usuário
+
+### Documentação da API
+
+Além da interface de usuário, o projeto inclui documentação completa da API:
+
+![Documentação da API](/docs/images/api-docs.png)
+
+A documentação interativa da API, gerada automaticamente pelo FastAPI, permite:
+- Exploração fácil dos endpoints
+- Teste direto dos métodos
+- Descrição detalhada dos parâmetros e respostas

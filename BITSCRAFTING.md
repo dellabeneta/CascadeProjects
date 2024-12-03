@@ -1,6 +1,6 @@
 # 🛠 Bitscrafting: Guia Técnico do Projeto
 
-## 📑 Índice
+## Índice
 1. [Arquitetura do Projeto](#arquitetura-do-projeto)
 2. [Scripts e Automação](#scripts-e-automação)
 3. [Ambientes e Configuração](#ambientes-e-configuração)

@@ -1,4 +1,4 @@
-# Pessoas CRUD 👥
+# Pessoas CRUD
 
 Uma aplicação moderna de gerenciamento de cadastros, construída com Python e React.
 

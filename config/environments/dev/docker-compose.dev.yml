@@ -6,10 +6,10 @@ services:
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=sistema_cadastro
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  
   backend:
     build: 
       context: ../../backend

@@ -31,5 +31,6 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << 'EOF'
             cd ~/python-peoples-crud
             git pull origin main
+            ./docker-nuke.sh
             make dev-up
           EOF

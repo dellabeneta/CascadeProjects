@@ -64,3 +64,7 @@ jobs:
           # Rebuild e restart dos containers
           docker-compose -f config/docker-compose.yml down
           docker-compose -f config/docker-compose.yml up -d --build
+          
+          # Mostrar logs dos containers para diagnóstico
+          docker-compose -f config/docker-compose.yml ps
+          docker-compose -f config/docker-compose.yml logs

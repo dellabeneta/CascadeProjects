@@ -13,41 +13,18 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v3
       
-      - name: Configurar SSH
-        uses: webfactory/ssh-agent@v0.8.0
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      
-      - name: Adicionar host conhecido
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.DROPLET_IP }} >> ~/.ssh/known_hosts
-      
-      - name: Preparar deploy
-        env:
-          DROPLET_IP: ${{ secrets.DROPLET_IP }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-        run: |
-          echo "Iniciando deploy..."
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << 'EOF'
-            # Log de início
-            echo "Iniciando processo de deploy em $(date)"
-            
-            # Navegar para o diretório do projeto
+          host: ${{ secrets.DROPLET_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
             cd ~/python-peoples-crud
-            
-            # Log de atualização de código
-            echo "Atualizando código..."
             git pull origin main
             
-            # Log de parada de containers
-            echo "Parando containers existentes..."
-            docker compose -f config/docker-compose.yml down
-            
-            # Log de criação de .env
-            echo "Criando arquivo de ambiente..."
+            # Criar .env com variáveis secretas
             cat > .env << EOL
-            # Variáveis de ambiente para deploy
             POSTGRES_DB=sistema_cadastro
             POSTGRES_USER=postgres
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
@@ -63,21 +40,6 @@ jobs:
             ADMIN_EMAIL=admin@example.com
             EOL
             
-            # Log de inicialização de containers
-            echo "Iniciando novos containers..."
+            # Reiniciar containers
+            docker compose -f config/docker-compose.yml down
             docker compose -f config/docker-compose.yml up -d
-            
-            # Log de conclusão
-            echo "Deploy concluído em $(date)"
-          EOF
-        
-      - name: Verificar status do deploy
-        env:
-          DROPLET_IP: ${{ secrets.DROPLET_IP }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-        run: |
-          # Verificação básica de status
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << 'EOF'
-            docker ps
-            docker compose -f config/docker-compose.yml ps
-          EOF

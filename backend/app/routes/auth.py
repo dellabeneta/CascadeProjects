@@ -1,5 +1,6 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+import logging
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
@@ -7,6 +8,10 @@ from app.core.database import get_db
 from app.core.auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from app.models.user import User
 from app.schemas.user import UserCreate, Token, UserInDB
+
+# Configurar logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -34,17 +39,26 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/token", response_model=Token)
 def login_for_access_token(
+    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
+    # Log da tentativa de login
+    client_host = request.client.host
+    logger.info(f"Tentativa de login - Usuário: {form_data.username} - IP: {client_host}")
+    
     # Autenticar usuário
     user = db.query(User).filter(User.username == form_data.username).first()
     if not user or not user.verify_password(form_data.password):
+        logger.warning(f"Falha no login - Usuário: {form_data.username} - IP: {client_host}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
+    # Log de login bem-sucedido
+    logger.info(f"Login bem-sucedido - Usuário: {form_data.username} - IP: {client_host}")
     
     # Criar token de acesso
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)

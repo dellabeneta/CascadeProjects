@@ -23,23 +23,23 @@ jobs:
             cd ~/python-peoples-crud
             git pull origin main
             
-            # Criar .env com variáveis secretas
+            # Criar .env com variáveis secretas (sem espaços nas chaves)
             cat > .env << EOL
-            POSTGRES_DB=sistema_cadastro
-            POSTGRES_USER=postgres
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            DATABASE_URL=postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/sistema_cadastro
-            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
-            JWT_ALGORITHM=HS256
-            JWT_ACCESS_TOKEN_EXPIRE_MINUTES=10
-            BACKEND_CORS_ORIGINS=${{ secrets.BACKEND_CORS_ORIGINS }}
-            ENVIRONMENT=producao
-            DEBUG=0
-            ADMIN_USERNAME=admin
-            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
-            ADMIN_EMAIL=admin@example.com
-            EOL
+POSTGRES_DB=sistema_cadastro
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+DATABASE_URL=postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/sistema_cadastro
+JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=10
+BACKEND_CORS_ORIGINS=${{ secrets.BACKEND_CORS_ORIGINS }}
+ENVIRONMENT=producao
+DEBUG=0
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+ADMIN_EMAIL=admin@example.com
+EOL
             
-            # Reiniciar containers
+            # Reiniciar containers (usando .env na raiz)
             docker compose -f config/docker-compose.yml down
             docker compose -f config/docker-compose.yml up -d

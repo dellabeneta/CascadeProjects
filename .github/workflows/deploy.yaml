@@ -9,75 +9,75 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     
-    env:
-      # Variáveis do Banco
-      POSTGRES_DB: sistema_cadastro
-      POSTGRES_USER: postgres
-      
-      # Configurações JWT
-      JWT_ALGORITHM: HS256
-      JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 10
-      
-      # Configurações da Aplicação
-      BACKEND_CORS_ORIGINS: '["http://localhost:5173","http://localhost:3000","http://localhost:8000"]'
-      ENVIRONMENT: producao
-      DEBUG: 0
-    
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
-      
-      - name: Configurar variáveis de ambiente
-        run: |
-          # Construir DATABASE_URL usando o secret POSTGRES_PASSWORD
-          echo "DATABASE_URL=postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/sistema_cadastro" >> $GITHUB_ENV
       
       - name: Configurar SSH
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          
+      
       - name: Adicionar host conhecido
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.DROPLET_IP }} >> ~/.ssh/known_hosts
       
-      - name: Deploy para DigitalOcean
+      - name: Preparar deploy
         env:
           DROPLET_IP: ${{ secrets.DROPLET_IP }}
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          # Criar arquivo .env no servidor
+          echo "Iniciando deploy..."
           ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << 'EOF'
+            # Log de início
+            echo "Iniciando processo de deploy em $(date)"
+            
+            # Navegar para o diretório do projeto
             cd ~/python-peoples-crud
             
-            # Criar arquivo .env com todas as variáveis
-            cat > config/.env << EOL
-            # Configurações do Banco de Dados PostgreSQL
-            POSTGRES_DB=${POSTGRES_DB}
-            POSTGRES_USER=${POSTGRES_USER}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            DATABASE_URL=${DATABASE_URL}
-
-            # Configurações de Autenticação
-            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
-            JWT_ALGORITHM=${JWT_ALGORITHM}
-            JWT_ACCESS_TOKEN_EXPIRE_MINUTES=${JWT_ACCESS_TOKEN_EXPIRE_MINUTES}
-
-            # Configurações de CORS
-            BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
-
-            # Configurações do Ambiente
-            ENVIRONMENT=${ENVIRONMENT}
-            DEBUG=${DEBUG}
-            EOL
-
-            # Atualizar código
+            # Log de atualização de código
+            echo "Atualizando código..."
             git pull origin main
-
-            # Parar containers existentes
+            
+            # Log de parada de containers
+            echo "Parando containers existentes..."
             docker compose -f config/docker-compose.yml down
-
-            # Subir containers
+            
+            # Log de criação de .env
+            echo "Criando arquivo de ambiente..."
+            cat > .env << EOL
+            # Variáveis de ambiente para deploy
+            POSTGRES_DB=sistema_cadastro
+            POSTGRES_USER=postgres
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            DATABASE_URL=postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/sistema_cadastro
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            JWT_ALGORITHM=HS256
+            JWT_ACCESS_TOKEN_EXPIRE_MINUTES=10
+            BACKEND_CORS_ORIGINS=["*"]
+            ENVIRONMENT=producao
+            DEBUG=0
+            ADMIN_USERNAME=admin
+            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+            ADMIN_EMAIL=admin@example.com
+            EOL
+            
+            # Log de inicialização de containers
+            echo "Iniciando novos containers..."
             docker compose -f config/docker-compose.yml up -d
+            
+            # Log de conclusão
+            echo "Deploy concluído em $(date)"
+          EOF
+        
+      - name: Verificar status do deploy
+        env:
+          DROPLET_IP: ${{ secrets.DROPLET_IP }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          # Verificação básica de status
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << 'EOF'
+            docker ps
+            docker compose -f config/docker-compose.yml ps
           EOF

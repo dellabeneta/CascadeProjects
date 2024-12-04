@@ -31,6 +31,5 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << 'EOF'
             cd ~/python-peoples-crud
             git pull origin main
-            docker compose -f config/environments/dev/docker-compose.dev.yml down
-            docker compose -f config/environments/dev/docker-compose.dev.yml up -d --build
+            make dev-up
           EOF

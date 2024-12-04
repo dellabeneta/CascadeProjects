@@ -1,8 +1,8 @@
-.PHONY: dev-up dev-down
+.PHONY: up down
 
 # Desenvolvimento
-dev-up:
-	./scripts/environment.sh start dev
+up:
+	./scripts/environment.sh start
 
-dev-down:
-	./scripts/environment.sh stop dev
+down:
+	./scripts/environment.sh stop

@@ -2,16 +2,13 @@
 
 # Função para carregar variáveis de ambiente
 load_env() {
-    local env=$1
-    if [ -f "config/base/.env.base" ]; then
+    if [ -f ".env" ]; then
         set -a
-        source config/base/.env.base
+        source .env
         set +a
-    fi
-    if [ -f "config/environments/$env/.env.$env" ]; then
-        set -a
-        source config/environments/$env/.env.$env
-        set +a
+    else
+        echo "Arquivo .env não encontrado. Por favor, copie .env.example para .env e configure suas variáveis."
+        exit 1
     fi
 }
 
@@ -27,14 +24,12 @@ show_resources() {
 
 # Função para iniciar ambiente
 start_environment() {
-    local env=$1
-    echo "Starting $env environment..."
+    echo "Starting environment..."
     
-    load_env $env
+    load_env
     
-    docker compose -f config/base/docker-compose.base.yml \
-                  -f config/environments/$env/docker-compose.$env.yml \
-                  --env-file config/environments/$env/.env.$env \
+    docker compose -f config/docker-compose.yml \
+                  --env-file .env \
                   up -d --build
 
     if [ $? -eq 0 ]; then
@@ -48,14 +43,12 @@ start_environment() {
 
 # Função para parar ambiente
 stop_environment() {
-    local env=$1
-    echo "Stopping $env environment..."
+    echo "Stopping environment..."
     
-    load_env $env
+    load_env
     
-    docker compose -f config/base/docker-compose.base.yml \
-                  -f config/environments/$env/docker-compose.$env.yml \
-                  --env-file config/environments/$env/.env.$env \
+    docker compose -f config/docker-compose.yml \
+                  --env-file .env \
                   down
 
     if [ $? -eq 0 ]; then
@@ -68,18 +61,17 @@ stop_environment() {
 
 # Função principal
 main() {
-    local action=$1
-    local env=$2
+    action=$1
 
     case $action in
-        "start")
-            start_environment $env
+        start)
+            start_environment
             ;;
-        "stop")
-            stop_environment $env
+        stop)
+            stop_environment
             ;;
         *)
-            echo "Usage: $0 {start|stop} {dev|qa|prod}"
+            echo "Usage: $0 <start|stop>"
             exit 1
             ;;
     esac

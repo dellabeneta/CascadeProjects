@@ -3,15 +3,34 @@ name: Deploy to DigitalOcean
 on:
   push:
     branches:
-      - main  # ou master, dependendo da sua branch principal
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     
+    env:
+      # Variáveis do Banco
+      POSTGRES_DB: sistema_cadastro
+      POSTGRES_USER: postgres
+      
+      # Configurações JWT
+      JWT_ALGORITHM: HS256
+      JWT_ACCESS_TOKEN_EXPIRE_MINUTES: 10
+      
+      # Configurações da Aplicação
+      BACKEND_CORS_ORIGINS: '["http://localhost:5173","http://localhost:3000","http://localhost:8000"]'
+      ENVIRONMENT: producao
+      DEBUG: 0
+    
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
+      
+      - name: Configurar variáveis de ambiente
+        run: |
+          # Construir DATABASE_URL usando o secret POSTGRES_PASSWORD
+          echo "DATABASE_URL=postgresql://postgres:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/sistema_cadastro" >> $GITHUB_ENV
       
       - name: Configurar SSH
         uses: webfactory/ssh-agent@v0.8.0
@@ -28,9 +47,33 @@ jobs:
           DROPLET_IP: ${{ secrets.DROPLET_IP }}
           SSH_USER: ${{ secrets.SSH_USER }}
         run: |
+          # Criar arquivo .env no servidor
           ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << 'EOF'
             cd ~/python-peoples-crud
+            
+            # Criar arquivo .env com todas as variáveis
+            cat > config/.env << EOL
+            # Configurações do Banco de Dados PostgreSQL
+            POSTGRES_DB=${POSTGRES_DB}
+            POSTGRES_USER=${POSTGRES_USER}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            DATABASE_URL=${DATABASE_URL}
+
+            # Configurações de Autenticação
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            JWT_ALGORITHM=${JWT_ALGORITHM}
+            JWT_ACCESS_TOKEN_EXPIRE_MINUTES=${JWT_ACCESS_TOKEN_EXPIRE_MINUTES}
+
+            # Configurações de CORS
+            BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+
+            # Configurações do Ambiente
+            ENVIRONMENT=${ENVIRONMENT}
+            DEBUG=${DEBUG}
+            EOL
+
+            # Atualizar código e reiniciar containers
             git pull origin main
             ./docker-nuke.sh
-            make dev-up
+            make up
           EOF

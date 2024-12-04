@@ -39,5 +39,5 @@ jobs:
           echo "ADMIN_EMAIL=${{ secrets.ENV_ADMIN_EMAIL }}" >> .env
           
           # Rebuild e restart dos containers
-          docker-compose -f config/docker-compose.yml down
-          docker-compose -f config/docker-compose.yml up -d --build
+          docker compose -f config/docker-compose.yml down
+          docker compose -f config/docker-compose.yml up -d --build

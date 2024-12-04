@@ -20,13 +20,47 @@ jobs:
         username: ${{ secrets.DO_SSH_USER }}
         key: ${{ secrets.DO_SSH_KEY }}
         script: |
-          # Usar caminho absoluto
-          cd /home/${{ secrets.DO_SSH_USER }}/python-peoples-crud
+          # Criar diretório se não existir
+          mkdir -p ~/python-peoples-crud
           
-          # Garantir que o repositório está atualizado
+          # Clonar repositório se não existir
+          if [ ! -d ~/python-peoples-crud/.git ]; then
+            git clone https://github.com/${{ github.repository }}.git ~/python-peoples-crud
+          fi
+          
+          # Navegar para o diretório
+          cd ~/python-peoples-crud
+          
+          # Atualizar repositório
           git fetch --all
           git reset --hard origin/main
           
-          # Usar docker-compose com hífen
+          # Criar .env com secrets
+          echo "POSTGRES_DB=${{ secrets.ENV_POSTGRES_DB }}" > .env
+          echo "POSTGRES_USER=${{ secrets.ENV_POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.ENV_POSTGRES_PASSWORD }}" >> .env
+          echo "DATABASE_URL=${{ secrets.ENV_DATABASE_URL }}" >> .env
+          echo "JWT_SECRET_KEY=${{ secrets.ENV_JWT_SECRET_KEY }}" >> .env
+          echo "JWT_ALGORITHM=${{ secrets.ENV_JWT_ALGORITHM }}" >> .env
+          echo "JWT_ACCESS_TOKEN_EXPIRE_MINUTES=${{ secrets.ENV_JWT_ACCESS_TOKEN_EXPIRE_MINUTES }}" >> .env
+          echo "BACKEND_CORS_ORIGINS=${{ secrets.ENV_BACKEND_CORS_ORIGINS }}" >> .env
+          echo "ENVIRONMENT=${{ secrets.ENV_ENVIRONMENT }}" >> .env
+          echo "DEBUG=${{ secrets.ENV_DEBUG }}" >> .env
+          echo "ADMIN_USERNAME=${{ secrets.ENV_ADMIN_USERNAME }}" >> .env
+          echo "ADMIN_PASSWORD=${{ secrets.ENV_ADMIN_PASSWORD }}" >> .env
+          echo "ADMIN_EMAIL=${{ secrets.ENV_ADMIN_EMAIL }}" >> .env
+          
+          # Garantir que Docker e Docker Compose estão instalados
+          if ! command -v docker &> /dev/null; then
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sudo sh get-docker.sh
+          fi
+          
+          if ! command -v docker-compose &> /dev/null; then
+            sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+          fi
+          
+          # Rebuild e restart dos containers
           docker-compose -f config/docker-compose.yml down
           docker-compose -f config/docker-compose.yml up -d --build

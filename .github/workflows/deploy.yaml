@@ -40,6 +40,6 @@ ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
 ADMIN_EMAIL=admin@example.com
 EOL
             
-            # Reiniciar containers (usando .env na raiz)
-            docker compose -f config/docker-compose.yml down
-            docker compose -f config/docker-compose.yml up -d
+# Reiniciar containers (usando .env na raiz)
+docker compose -f config/docker-compose.yml down
+docker compose -f config/docker-compose.yml up -d

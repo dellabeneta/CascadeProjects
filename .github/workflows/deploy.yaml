@@ -55,7 +55,7 @@ jobs:
             JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
             JWT_ALGORITHM=HS256
             JWT_ACCESS_TOKEN_EXPIRE_MINUTES=10
-            BACKEND_CORS_ORIGINS=["*"]
+            BACKEND_CORS_ORIGINS=${{ secrets.BACKEND_CORS_ORIGINS }}
             ENVIRONMENT=producao
             DEBUG=0
             ADMIN_USERNAME=admin

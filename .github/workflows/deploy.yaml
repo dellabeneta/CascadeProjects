@@ -72,8 +72,12 @@ jobs:
             DEBUG=${DEBUG}
             EOL
 
-            # Atualizar código e reiniciar containers
+            # Atualizar código
             git pull origin main
-            ./docker-nuke.sh
-            make up
+
+            # Parar containers existentes
+            docker compose -f config/docker-compose.yml down
+
+            # Subir containers
+            docker compose -f config/docker-compose.yml up -d
           EOF

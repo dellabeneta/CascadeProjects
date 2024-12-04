@@ -1,0 +1,36 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main  # ou master, dependendo da sua branch principal
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+      
+      - name: Configurar SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
+      - name: Adicionar host conhecido
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.DROPLET_IP }} >> ~/.ssh/known_hosts
+      
+      - name: Deploy para DigitalOcean
+        env:
+          DROPLET_IP: ${{ secrets.DROPLET_IP }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.DROPLET_IP }} << 'EOF'
+            cd ~/python-peoples-crud
+            git pull origin main
+            docker compose -f config/environments/dev/docker-compose.dev.yml down
+            docker compose -f config/environments/dev/docker-compose.dev.yml up -d --build
+          EOF

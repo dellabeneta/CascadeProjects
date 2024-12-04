@@ -9,6 +9,20 @@ const api = axios.create({
     },
 });
 
+// Função específica para login que usa x-www-form-urlencoded
+export const login = async (username, password) => {
+    const formData = new URLSearchParams();
+    formData.append('username', username);
+    formData.append('password', password);
+
+    const response = await api.post('/auth/token', formData, {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    });
+    return response.data;
+};
+
 // Intercepta todas as requisições
 api.interceptors.request.use(config => {
     // Obtém o token do sessionStorage

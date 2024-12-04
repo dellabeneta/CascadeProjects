@@ -11,6 +11,7 @@ import {
   Input,
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
+import { login as apiLogin } from '../services/api';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,27 +35,12 @@ const Login = () => {
     setError('');
 
     try {
-      const formBody = new URLSearchParams();
-      formBody.append('username', formData.username);
-      formBody.append('password', formData.password);
-
-      const response = await fetch('http://localhost:8000/auth/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: formBody,
-      });
-
-      if (!response.ok) {
-        throw new Error('Credenciais inválidas');
-      }
-
-      const data = await response.json();
-      login(data.access_token); // Usando a função login do contexto
+      const data = await apiLogin(formData.username, formData.password);
+      login(data.access_token);
       navigate('/');
     } catch (err) {
-      setError(err.message);
+      setError('Credenciais inválidas');
+      console.error('Erro ao fazer login:', err);
     }
   };
 

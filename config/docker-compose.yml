@@ -22,6 +22,7 @@ services:
     build: 
       context: ../backend
       dockerfile: Dockerfile
+    # image: dellabeneta/python-peoples-crud-backend:latest
     volumes:
       - ../backend:/app:cached
       - ../backend/tests:/app/tests:cached
@@ -54,6 +55,7 @@ services:
     build:
       context: ../frontend
       dockerfile: Dockerfile
+    # image: dellabeneta/python-peoples-crud-frontend:latest
     ports:
       - "5173:5173"
     volumes:

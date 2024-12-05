@@ -92,7 +92,7 @@ Se não configurar no `.env`, use:
 
 ## Contribuição
 
-Por favor, leia as diretrizes de contribuição antes de submeter um pull request.
+[Especifica como contribuir]
 
 ## Licença
 

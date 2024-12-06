@@ -35,13 +35,20 @@ Abra o arquivo `.env` e configure as variáveis conforme necessário:
 
 ```
 Configurações do Banco de Dados
-POSTGRES_DB=sistema_cadastro POSTGRES_USER=app_user POSTGRES_PASSWORD=SenhaPostgres_Complexa_2024! DATABASE_URL=postgresql://app_user:SenhaPostgres_Complexa_2024!@postgres:5432/sistema_cadastro
+POSTGRES_DB=sistema_cadastro
+POSTGRES_USER=app_user
+POSTGRES_PASSWORD=SenhaPostgres_Complexa_2024!
+DATABASE_URL=postgresql://app_user:SenhaPostgres_Complexa_2024!@postgres:5432/sistema_cadastro
 
 Configurações de Autenticação JWT
-JWT_SECRET_KEY=ChaveSecretaJWT_NuncaCompartilhe_Maisde32Caracteres! JWT_ALGORITHM=HS256 JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+JWT_SECRET_KEY=ChaveSecretaJWT_NuncaCompartilhe_Maisde32Caracteres!
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 Configurações do Usuário Admin
-ADMIN_USERNAME=admin_app ADMIN_PASSWORD=SenhaAdmin_Forte_2024!@# ADMIN_EMAIL=admin@seudominio.com
+ADMIN_USERNAME=admin_app
+ADMIN_PASSWORD=SenhaAdmin_Forte_2024!@#
+ADMIN_EMAIL=admin@seudominio.com
 ```
 
 ### 4. Iniciar o Projeto

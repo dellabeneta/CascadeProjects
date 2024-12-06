@@ -4,6 +4,15 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/dellabeneta/python-peoples-crud)
 ![GitHub License](https://img.shields.io/github/license/dellabeneta/python-peoples-crud)
 ![GitHub Release](https://img.shields.io/github/v/release/dellabeneta/python-peoples-crud)
+![Codecov](https://img.shields.io/codecov/c/github/dellabeneta/python-peoples-crud)
+![Code Quality](https://img.shields.io/lgtm/grade/python/github/dellabeneta/python-peoples-crud)
+![Tests](https://img.shields.io/github/workflow/status/dellabeneta/python-peoples-crud/Tests?label=tests)
+![Dependabot](https://badgen.net/badge/Dependabot/enabled/green?icon=dependabot)
+![Python Versions](https://img.shields.io/pypi/pyversions/python-peoples-crud)
+![GitHub stars](https://img.shields.io/github/stars/dellabeneta/python-peoples-crud)
+![GitHub forks](https://img.shields.io/github/forks/dellabeneta/python-peoples-crud)
+![Docker](https://img.shields.io/docker/pulls/dellabeneta/python-peoples-crud)
+
 
 # Sistema de Cadastro de Pessoas
 

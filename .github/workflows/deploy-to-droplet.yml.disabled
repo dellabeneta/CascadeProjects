@@ -13,33 +13,34 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     
     steps:
-      - name: Install SSH key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.DROPLET_KNOWN_HOSTS }}
-          
-      - name: Add known hosts
-        run: ssh-keyscan -H ${{ secrets.DROPLET_IP }} >> ~/.ssh/known_hosts
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Copy docker-compose file
-        uses: appleboy/scp-action@v0.1.4
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.1
         with:
-          host: ${{ secrets.DROPLET_IP }}
-          username: ${{ secrets.DROPLET_USERNAME }}
-          key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
-          source: "config/docker-compose.yml"
-          target: "/app"
-          
-      - name: Deploy to DigitalOcean
-        uses: appleboy/ssh-action@v1.0.0
+          ssh-private-key: ${{ secrets.DROPLET_SSH_KEY }}
+
+      - name: Clone repository on droplet
+        uses: appleboy/ssh-action@v0.1.11
         with:
-          host: ${{ secrets.DROPLET_IP }}
-          username: ${{ secrets.DROPLET_USERNAME }}
-          key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            cd /app
-            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-            docker-compose pull
-            docker-compose up -d --force-recreate
-            docker image prune -f
+            # Install Docker
+            sudo apt-get update
+            sudo apt-get install -y ca-certificates curl gnupg
+            sudo install -m 0755 -d /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            sudo chmod a+r /etc/apt/keyrings/docker.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+            # Clone repository
+            git clone git@github.com:dellabeneta/python-peoples-crud.git
+
+            # Navigate to config directory and start Docker Compose
+            cd python-peoples-crud/config
+            sudo docker compose up -d

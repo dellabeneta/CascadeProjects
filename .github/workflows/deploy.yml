@@ -1,144 +1,65 @@
-name: Build and Push Docker Images
+name: Deploy to Production
 
 on:
   push:
     branches: [ "main" ]
-  #   paths:
-  #     - 'backend/**'
-  #     - 'frontend/**'
-  #     - 'requirements.txt'
-  #     - 'Dockerfile'
-  #     - '.dockerignore'
-  # pull_request:
-  #   branches: [ "main" ]
-  #   paths:
-  #     - 'backend/**'
-  #     - 'frontend/**'
-  #     - 'requirements.txt'
-  #     - 'Dockerfile'
-  #     - '.dockerignore'
 
 jobs:
-  build-and-push:
+  deploy:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-        
-      - name: Login to Docker Hub
+      - uses: actions/checkout@v3
+      
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Generate Docker metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/python-peoples-crud-backend
-            ${{ secrets.DOCKERHUB_USERNAME }}/python-peoples-crud-frontend
-          tags: |
-            type=raw,value=latest
-            type=sha,format=short
-            type=raw,value={{date 'YYYYMMDD'}}
-        
-      - name: Build and push backend
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Build and push Backend
         uses: docker/build-push-action@v4
         with:
           context: ./backend
-          file: ./backend/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          
-      - name: Build and push frontend
+          tags: ghcr.io/${{ github.repository }}/backend:latest
+      
+      - name: Build and push Frontend
         uses: docker/build-push-action@v4
         with:
           context: ./frontend
-          file: ./frontend/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-
-      - name: Configure SSH
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
-          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H $DROPLET_HOST >> ~/.ssh/known_hosts
-
-      - name: Prepare Deployment Directory
-        env:
-          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
-          DROPLET_USER: ${{ secrets.DROPLET_USER }}
-        run: |
-          # Criar estrutura de diretórios no droplet
-          ssh $DROPLET_USER@$DROPLET_HOST 'mkdir -p /opt/python-peoples-crud/{config,backend}'
-          
-          # Copiar arquivos necessários
-          scp -r backend/* $DROPLET_USER@$DROPLET_HOST:/opt/python-peoples-crud/backend/
-          scp config/docker-compose.yml $DROPLET_USER@$DROPLET_HOST:/opt/python-peoples-crud/config/
-
-      - name: Create Environment File
-        env:
-          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
-          DROPLET_USER: ${{ secrets.DROPLET_USER }}
-        run: |
-          # Criar arquivo .env com todas as variáveis
-          cat > .env << EOL
-          # Database
-          DATABASE_URL=${{ secrets.DATABASE_URL }}
-          POSTGRES_DB=peoples
-          POSTGRES_USER=postgres
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          
-          # JWT Configuration
-          JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
-          JWT_ALGORITHM=HS256
-          JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
-          
-          # Admin User
-          ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
-          ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
-          ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
-          
-          # CORS
-          BACKEND_CORS_ORIGINS=*
-          EOL
-          
-          # Copiar .env para o droplet
-          scp .env $DROPLET_USER@$DROPLET_HOST:/opt/python-peoples-crud/
-
-      - name: Deploy Application
-        env:
-          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
-          DROPLET_USER: ${{ secrets.DROPLET_USER }}
-        run: |
-          # Pull das novas imagens
-          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose pull"
-          
-          # Parar containers existentes
-          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose down --remove-orphans"
-          
-          # Recriar e iniciar containers
-          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose up -d --force-recreate"
-          
-          # Limpar imagens não utilizadas
-          ssh $DROPLET_USER@$DROPLET_HOST "docker system prune -f"
-
-      - name: Verify Deployment
-        env:
-          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
-          DROPLET_USER: ${{ secrets.DROPLET_USER }}
-        run: |
-          # Verificar status dos containers
-          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose ps"
-          
-          # Mostrar logs iniciais
-          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose logs --tail=50"
+          tags: ghcr.io/${{ github.repository }}/frontend:latest
+      
+      - name: Deploy to Digital Ocean droplet
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+          script: |
+            # Atualizar código
+            cd /opt/python-peoples-crud
+            git pull origin main
+            
+            # Criar/atualizar arquivo .env
+            cat > .env << EOL
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            POSTGRES_DB=peoples
+            POSTGRES_USER=postgres
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            JWT_ALGORITHM=HS256
+            JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+            ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
+            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+            ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
+            BACKEND_CORS_ORIGINS=*
+            EOL
+            
+            # Deploy com Docker Compose
+            cd config
+            docker compose pull
+            docker compose down --remove-orphans
+            docker compose up -d --force-recreate
+            docker system prune -f

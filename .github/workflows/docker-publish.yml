@@ -50,8 +50,8 @@ jobs:
       - name: Build and push backend
         uses: docker/build-push-action@v4
         with:
-          context: ./backend
-          file: ./backend/Dockerfile
+          context: /opt/python-peoples-crud/backend
+          file: /opt/python-peoples-crud/backend/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           

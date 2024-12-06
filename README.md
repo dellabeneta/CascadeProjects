@@ -105,8 +105,32 @@ Se não configurar no `.env`, use:
 
 ## Contribuição
 
-[Especifica como contribuir]
+Contribuições são bem-vindas! Para contribuir com este projeto, siga estas etapas:
+
+1. Faça um fork do repositório
+2. Crie uma branch para sua feature (`git checkout -b feature/NovaFeature`)
+3. Commit suas alterações (`git commit -m 'Adiciona NovaFeature'`)
+4. Push para a branch (`git push origin feature/NovaFeature`)
+5. Abra um Pull Request
+
+## Contato
+
+- **Email**: m.dellabeneta@gmail.com  
+- **GitHub**: https://github.com/dellabeneta        
+- **Linkedin**: https://www.linkedin.com/in/mdellabeneta/
 
 ## Licença
 
-[Especificar a licença do projeto]
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+A Licença MIT é uma licença de software livre que permite:
+- Uso comercial
+- Modificação
+- Distribuição
+- Uso privado
+
+Com as seguintes limitações:
+- Responsabilidade limitada
+- Garantia limitada
+
+Consulte o arquivo LICENSE para os termos completos.

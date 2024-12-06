@@ -27,29 +27,44 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H $DROPLET_HOST >> ~/.ssh/known_hosts
 
-      - name: Copy Docker Compose file
+      - name: Prepare Deployment Directory
         env:
           DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
           DROPLET_USER: ${{ secrets.DROPLET_USER }}
         run: |
-          # Criar diretório de config no droplet
-          ssh $DROPLET_USER@$DROPLET_HOST 'mkdir -p /opt/python-peoples-crud/config'
-          # Copiar o arquivo docker-compose.yml
+          # Criar estrutura de diretórios no droplet
+          ssh $DROPLET_USER@$DROPLET_HOST 'mkdir -p /opt/python-peoples-crud/{config,backend}'
+          
+          # Copiar arquivos necessários
+          scp -r backend/* $DROPLET_USER@$DROPLET_HOST:/opt/python-peoples-crud/backend/
           scp config/docker-compose.yml $DROPLET_USER@$DROPLET_HOST:/opt/python-peoples-crud/config/
 
-      - name: Create and Copy ENV file
+      - name: Create Environment File
         env:
           DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
           DROPLET_USER: ${{ secrets.DROPLET_USER }}
         run: |
-          # Criar .env localmente
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
-          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
-          echo "JWT_ALGORITHM=HS256" >> .env
-          echo "JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30" >> .env
-          echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> .env
-          echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
-          echo "ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}" >> .env
+          # Criar arquivo .env com todas as variáveis
+          cat > .env << EOL
+          # Database
+          DATABASE_URL=${{ secrets.DATABASE_URL }}
+          POSTGRES_DB=peoples
+          POSTGRES_USER=postgres
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          
+          # JWT Configuration
+          JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+          JWT_ALGORITHM=HS256
+          JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+          
+          # Admin User
+          ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+          ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
+          
+          # CORS
+          BACKEND_CORS_ORIGINS=*
+          EOL
           
           # Copiar .env para o droplet
           scp .env $DROPLET_USER@$DROPLET_HOST:/opt/python-peoples-crud/
@@ -70,6 +85,14 @@ jobs:
           
           # Limpar imagens não utilizadas
           ssh $DROPLET_USER@$DROPLET_HOST "docker system prune -f"
+
+      - name: Verify Deployment
+        env:
+          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
+          DROPLET_USER: ${{ secrets.DROPLET_USER }}
+        run: |
+          # Verificar status dos containers
+          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose ps"
           
-          # Verificar status e logs
-          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose ps && docker compose logs --tail=50"
+          # Mostrar logs iniciais
+          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose logs --tail=50"

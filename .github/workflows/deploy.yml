@@ -63,15 +63,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
 
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest     
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Configure SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}

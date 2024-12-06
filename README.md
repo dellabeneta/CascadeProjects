@@ -2,7 +2,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/dellabeneta/python-peoples-crud/docker-publish.yml?label=Build)
 ![GitHub top language](https://img.shields.io/github/languages/top/dellabeneta/python-peoples-crud)
-![GitHub License](https://img.shields.io/github/license/dellabeneta/python-peoples-crud?color=blue)
+![GitHub License](https://img.shields.io/github/license/dellabeneta/python-peoples-crud)
 ![GitHub Release](https://img.shields.io/github/v/release/dellabeneta/python-peoples-crud)
 
 # Sistema de Cadastro de Pessoas

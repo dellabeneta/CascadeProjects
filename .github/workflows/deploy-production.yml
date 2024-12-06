@@ -27,14 +27,22 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H $DROPLET_HOST >> ~/.ssh/known_hosts
 
+      - name: Copy Docker Compose file
+        env:
+          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
+          DROPLET_USER: ${{ secrets.DROPLET_USER }}
+        run: |
+          # Criar diretório de config no droplet
+          ssh $DROPLET_USER@$DROPLET_HOST 'mkdir -p /opt/python-peoples-crud/config'
+          # Copiar o arquivo docker-compose.yml
+          scp config/docker-compose.yml $DROPLET_USER@$DROPLET_HOST:/opt/python-peoples-crud/config/
+
       - name: Deploy to Digital Ocean
         env:
           DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
           DROPLET_USER: ${{ secrets.DROPLET_USER }}
         run: |
           ssh $DROPLET_USER@$DROPLET_HOST << EOF
-            # Criar diretório se não existir
-            mkdir -p /opt/python-peoples-crud
             cd /opt/python-peoples-crud
             
             # Criar/atualizar .env com todas as variáveis necessárias
@@ -53,7 +61,8 @@ jobs:
             ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
             EOL
 
-            # Pull das novas imagens
+            # Pull das novas imagens e deploy usando o docker-compose do diretório config
+            cd config
             docker compose pull
             
             # Parar containers existentes e remover volumes órfãos

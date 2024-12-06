@@ -37,46 +37,39 @@ jobs:
           # Copiar o arquivo docker-compose.yml
           scp config/docker-compose.yml $DROPLET_USER@$DROPLET_HOST:/opt/python-peoples-crud/config/
 
-      - name: Deploy to Digital Ocean
+      - name: Create and Copy ENV file
         env:
           DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
           DROPLET_USER: ${{ secrets.DROPLET_USER }}
         run: |
-          ssh $DROPLET_USER@$DROPLET_HOST << EOF
-            cd /opt/python-peoples-crud
-            
-            # Criar/atualizar .env com todas as variáveis necessárias
-            cat > .env << EOL
-            # Database
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            
-            # JWT Configuration
-            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
-            JWT_ALGORITHM=HS256
-            JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
-            
-            # Admin User
-            ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
-            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
-            ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
-            EOL
+          # Criar .env localmente
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+          echo "JWT_ALGORITHM=HS256" >> .env
+          echo "JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30" >> .env
+          echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> .env
+          echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
+          echo "ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}" >> .env
+          
+          # Copiar .env para o droplet
+          scp .env $DROPLET_USER@$DROPLET_HOST:/opt/python-peoples-crud/
 
-            # Pull das novas imagens e deploy usando o docker-compose do diretório config
-            cd config
-            docker compose pull
-            
-            # Parar containers existentes e remover volumes órfãos
-            docker compose down --remove-orphans
-            
-            # Recriar e iniciar containers
-            docker compose up -d --force-recreate
-            
-            # Limpar imagens não utilizadas
-            docker system prune -f
-            
-            # Verificar status dos containers
-            docker compose ps
-            
-            # Mostrar logs iniciais
-            docker compose logs --tail=50
-          EOF
+      - name: Deploy Application
+        env:
+          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
+          DROPLET_USER: ${{ secrets.DROPLET_USER }}
+        run: |
+          # Pull das novas imagens
+          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose pull"
+          
+          # Parar containers existentes
+          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose down --remove-orphans"
+          
+          # Recriar e iniciar containers
+          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose up -d --force-recreate"
+          
+          # Limpar imagens não utilizadas
+          ssh $DROPLET_USER@$DROPLET_HOST "docker system prune -f"
+          
+          # Verificar status e logs
+          ssh $DROPLET_USER@$DROPLET_HOST "cd /opt/python-peoples-crud/config && docker compose ps && docker compose logs --tail=50"

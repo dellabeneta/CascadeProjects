@@ -1,0 +1,73 @@
+name: Deploy to Production
+
+on:
+  workflow_run:
+    workflows: ["Build and Push Docker Images"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H $DROPLET_HOST >> ~/.ssh/known_hosts
+
+      - name: Deploy to Digital Ocean
+        env:
+          DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
+          DROPLET_USER: ${{ secrets.DROPLET_USER }}
+        run: |
+          ssh $DROPLET_USER@$DROPLET_HOST << 'ENDSSH'
+            # Criar diretório se não existir
+            mkdir -p /opt/python-peoples-crud
+            cd /opt/python-peoples-crud
+            
+            # Criar/atualizar .env com todas as variáveis necessárias
+            cat > .env << EOF
+            # Database
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            
+            # JWT Configuration
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            JWT_ALGORITHM=HS256
+            JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
+            
+            # Admin User
+            ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
+            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
+            ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
+            EOF
+
+            # Pull das novas imagens
+            docker compose pull
+            
+            # Parar containers existentes e remover volumes órfãos
+            docker compose down --remove-orphans
+            
+            # Recriar e iniciar containers
+            docker compose up -d --force-recreate
+            
+            # Limpar imagens não utilizadas
+            docker system prune -f
+            
+            # Verificar status dos containers
+            docker compose ps
+            
+            # Mostrar logs iniciais
+            docker compose logs --tail=50
+ENDSSH

@@ -10,7 +10,6 @@ from app.models.user import User
 from app.schemas.user import UserCreate, Token, UserInDB
 
 # Configurar logging
-# Teste
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 

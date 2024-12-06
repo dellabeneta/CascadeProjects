@@ -32,13 +32,13 @@ jobs:
           DROPLET_HOST: ${{ secrets.DROPLET_HOST }}
           DROPLET_USER: ${{ secrets.DROPLET_USER }}
         run: |
-          ssh $DROPLET_USER@$DROPLET_HOST << 'ENDSSH'
+          ssh $DROPLET_USER@$DROPLET_HOST << EOF
             # Criar diretório se não existir
             mkdir -p /opt/python-peoples-crud
             cd /opt/python-peoples-crud
             
             # Criar/atualizar .env com todas as variáveis necessárias
-            cat > .env << EOF
+            cat > .env << EOL
             # Database
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             
@@ -51,7 +51,7 @@ jobs:
             ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}
             ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}
             ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}
-            EOF
+            EOL
 
             # Pull das novas imagens
             docker compose pull
@@ -70,4 +70,4 @@ jobs:
             
             # Mostrar logs iniciais
             docker compose logs --tail=50
-ENDSSH
+          EOF

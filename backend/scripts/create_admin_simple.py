@@ -3,44 +3,53 @@ from sqlalchemy.orm import sessionmaker
 from app.core.database import Base
 from app.models.user import User
 import os
+import sys
 
-# URL de conexão com o PostgreSQL
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://postgres:postgres@postgres:5432/sistema_cadastro"
-)
+# Verificar se as variáveis de ambiente necessárias estão definidas
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    print("Erro: A variável de ambiente DATABASE_URL não está definida")
+    print("Configure a string de conexão do seu banco gerenciado no arquivo .env")
+    sys.exit(1)
 
 # Configurações do Admin via Variáveis de Ambiente
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin")
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@example.com")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
 
-# Criar banco e tabelas
-engine = create_engine(DATABASE_URL)
-Base.metadata.create_all(engine)
+if not ADMIN_PASSWORD or not ADMIN_EMAIL:
+    print("Erro: As variáveis ADMIN_PASSWORD e ADMIN_EMAIL precisam estar definidas no arquivo .env")
+    sys.exit(1)
 
-# Criar sessão
-SessionLocal = sessionmaker(bind=engine)
-db = SessionLocal()
+try:
+    # Criar banco e tabelas
+    engine = create_engine(DATABASE_URL)
+    Base.metadata.create_all(engine)
 
-# Verificar se o admin já existe
-existing_admin = db.query(User).filter(User.username == ADMIN_USERNAME).first()
+    # Criar sessão
+    SessionLocal = sessionmaker(bind=engine)
+    db = SessionLocal()
 
-if not existing_admin:
-    # Criar usuário admin apenas se não existir
-    admin = User(
-        username=ADMIN_USERNAME,
-        email=ADMIN_EMAIL,
-        hashed_password=User.get_password_hash(ADMIN_PASSWORD)
-    )
+    # Verificar se o admin já existe
+    existing_admin = db.query(User).filter(User.email == ADMIN_EMAIL).first()
 
-    # Adicionar ao banco
-    db.add(admin)
-    db.commit()
-    print(f"Usuário admin criado:")
-    print(f"Username: {ADMIN_USERNAME}")
-    print(f"Email: {ADMIN_EMAIL}")
-else:
-    print(f"Usuário admin {ADMIN_USERNAME} já existe, pulando criação")
+    if not existing_admin:
+        # Criar usuário admin apenas se não existir
+        admin = User(
+            username=ADMIN_EMAIL,  # Usando o email como username
+            email=ADMIN_EMAIL,
+            hashed_password=User.get_password_hash(ADMIN_PASSWORD)
+        )
 
-db.close()
+        # Adicionar ao banco
+        db.add(admin)
+        db.commit()
+        print(f"Usuário admin criado com sucesso!")
+        print(f"Email: {ADMIN_EMAIL}")
+    else:
+        print(f"Usuário admin {ADMIN_EMAIL} já existe, pulando criação")
+
+except Exception as e:
+    print(f"Erro ao conectar ao banco de dados ou criar usuário admin: {str(e)}")
+    sys.exit(1)
+finally:
+    db.close()

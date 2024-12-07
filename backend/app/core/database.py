@@ -9,8 +9,18 @@ SQLALCHEMY_DATABASE_URL = os.getenv(
     "postgresql://postgres:postgres@localhost:5432/sistema_cadastro"
 )
 
+# Configurações SSL para banco de dados na nuvem
+ssl_args = {}
+if os.getenv("DATABASE_SSL_MODE"):
+    ssl_args = {
+        "ssl_mode": os.getenv("DATABASE_SSL_MODE", "require"),
+    }
+
 # Criar engine do SQLAlchemy
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args=ssl_args
+)
 
 # Criar classe de sessão
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
